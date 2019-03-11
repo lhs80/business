@@ -1,0 +1,403 @@
+@import './variables.scss';
+@import './element-ui.scss';
+@import './top.scss';
+//@import './btn.scss';
+@import './tags.scss';
+//@import './mixin.scss';
+@import './sidebar.scss';
+
+/*禁止复制
+{
+	webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	outline: none;
+}*/
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+}
+
+//@include scrollBar();
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+input,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-width: 1300px;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei";
+  line-height: 2;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+fieldset,
+img {
+  border: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+em {
+  font-style: normal;
+}
+
+input,
+button,
+select,
+textarea {
+  outline: none;
+}
+
+textarea {
+  resize: none;
+}
+
+//禁用了文本的拖拉，尤其在谷歌下
+p {
+  text-align: justify;
+  text-justify: distribute;
+}
+
+//为了使文本段落左右两边对齐
+p {
+  word-wrap: break-word
+}
+
+a {
+  text-decoration: none;
+}
+
+i {
+  display: inline-block;
+}
+
+/*a:hover { color: #f60; text-decoration:none; }*/
+
+address,
+cite,
+code,
+em,
+th {
+  font-weight: normal;
+  font-style: normal;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/*a:link{color:#009;}*/
+
+/*a:visited{color:#800080;}*/
+
+a:hover,
+a:active,
+a:focus {
+  text-decoration: underline;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.padding {
+  padding: 0 !important;
+}
+
+.margin {
+  margin: 0 !important;
+}
+
+.mt1 {
+  margin-top: 10px !important;
+}
+
+.mt2 {
+  margin-top: 20px !important;
+}
+
+.prl2 {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.ptb2 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.p2 {
+  padding: 20px;
+}
+
+.prl1 {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.ptb1 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.p1 {
+  padding: 10px;
+}
+
+.pull-right {
+  float: right !important;;
+}
+
+.pull-left {
+  float: left !important;
+}
+
+.pull-center {
+  text-align: center;
+}
+
+.pull-flex {
+  display: flex;
+}
+
+.pull-overflow {
+  overflow: hidden;
+}
+
+.pull-auto {
+  height: auto;
+  overflow: hidden;
+}
+
+.pull-height {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.pull-fixed {
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.text-primary {
+  color: #44abf7 !important;
+}
+
+.text-success {
+  color: #54c952 !important;
+}
+
+.text-danger {
+  color: #eb6060 !important;
+}
+
+.text-warning {
+  color: #ffc000 !important
+}
+
+.text-info {
+  color: #3abbdb !important
+}
+
+.text-muted {
+  color: #8f8e8e;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-link {
+  cursor: pointer;
+}
+
+.bg-grey {
+  background: #f8f8f8;
+}
+
+.bg-white {
+  background: white;
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+
+//main-container全局样式
+.app-main {
+  min-height: 100%
+}
+
+.filter-container {
+  padding-bottom: 10px;
+  text-align: right;
+  .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+  }
+}
+
+.app-container {
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.calendar-list-container {
+  margin: 10px;
+}
+
+/*气泡*/
+.poi-popup {
+  bottom: 40px !important;
+  font-size: 12px !important;
+  cursor: auto;
+}
+
+.poi-popup .leaflet-popup-tip {
+  width: 10px;
+  height: 10px;
+}
+
+.poi-popup .leaflet-popup-content {
+  margin: 6px 10px;
+  text-align: center;
+}
+
+.poi-popup .leaflet-popup-tip-container {
+  width: 40px;
+  height: 6px;
+  position: absolute;
+  left: 50%;
+  margin-left: -20px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.poi-popup.leaflet-popup {
+  position: absolute;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.poi-popup .leaflet-popup-content {
+  cursor: pointer;
+}
+
+#mapPoi .leaflet-interactive {
+  cursor: auto;
+}
+
+h6, .h6 {
+  font-size: 12px;
+}
+
+h5, .h5 {
+  font-size: 14px;
+}
+
+h4, .h4 {
+  font-size: 16px;
+}
+
+h3, .h3 {
+  font-size: 18px;
+}
+
+h2, .h2 {
+  font-size: 20px;
+}
+
+h1, .h1 {
+  font-size: 22px;
+}
+
+.cell .el-icon-edit, .cell .el-icon-delete,
+.cell .el-icon-view, .cell .el-icon-goods,
+.cell .icon-chengyuan, .cell .el-icon-refresh ,
+.cell .el-icon-tickets {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  color: #c2c2c2;
+  font-size: 16px;
+  text-align: center;
+  border: solid 1px #c2c2c2;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  cursor: pointer;
+  & + & {
+    margin-left: 7px;
+  }
+}
