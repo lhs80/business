@@ -26,11 +26,11 @@
         </el-row>
         <el-row :gutter="10" class="text-center" v-for="(item,index) in fareInfo.items" :key="index">
           <el-col :span="11" class="text-left h6 text-muted">
-            <span v-for="(city,key) in item.city" :key="key">{{city}}</span>
+            <span v-for="(city,key) in item.city" :key="key">{{city}};</span>
             <span @click="editSelectArea(index)">编辑</span>
           </el-col>
           <el-col :span="3">
-            <el-input size="small" v-model="item.min_money"></el-input>
+            <el-input size="small" v-model="item.less_money"></el-input>
           </el-col>
           <el-col :span="3">
             <el-input size="small" v-model="item.base_count"></el-input>
@@ -39,7 +39,7 @@
             <el-input size="small" v-model="item.greater_money"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-input size="small" v-model="item.less_money"></el-input>
+            <el-input size="small" v-model="item.min_money"></el-input>
           </el-col>
           <el-col :span="1">
             <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
@@ -149,7 +149,6 @@
         </div>
       </div>
     </div>
-    <!--<div class="v-modal" tabindex="0" style="z-index: 80;" v-if="isShowAreaList||isShowEditAreaList"></div>-->
   </div>
 </template>
 <script>
@@ -238,17 +237,17 @@
         });
         let selCitys = this.fareInfo.items[this.editAreaIndex].city;
         this.city.forEach((item, index) => {
-          if (selCitys.indexOf(item.name + ";") >= 0) {
+          if (selCitys.indexOf(item.name) >= 0) {
             item.isSel = true;
-            this.selectCity.push(item.name + ";");
+            this.selectCity.push(item.name);
           }
         })
       },
       cityChange(checked, value) {
         if (checked)
-          this.selectCity.push(value + ";");
+          this.selectCity.push(value);
         else
-          this.selectCity.splice(this.selectCity.indexOf(value + ";"), 1);
+          this.selectCity.splice(this.selectCity.indexOf(value), 1);
       },
       addArea() {
         if (!this.selectCity.length) {
@@ -260,7 +259,7 @@
           });
           return false;
         }
-        this.city.push({name: Object.keys(ChinaAddress["北京市"])[0], isSel: false})
+        this.city.push({name: Object.keys(ChinaAddress["北京市"])[0], isSel: false});
         this.fareInfo.items.push({
           city: this.selectCity,
           base_count: 0,

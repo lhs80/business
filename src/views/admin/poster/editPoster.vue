@@ -179,7 +179,7 @@
           posterId: this.$route.query.id
         };
         queryPostDetailFun(params).then(res => {
-          console.log(res);
+          console.log("detail", res);
           if (res.data.success) {
             this.postInfo = res.data.data;
             this.postInfo.type = [res.data.data.type];
@@ -219,7 +219,6 @@
         getBrand().then(res => {
           if (res.data.success)
             this.brandList = res.data.data;
-          console.log("type", this.brandList);
         });
       },
       submitForm(formName) {
@@ -232,7 +231,6 @@
               goods: this.postInfo.goods,
               type: this.postInfo.type.toString()
             };
-            console.log(params)
             updatePostFun(params).then(res => {
               if (res.data.success) {
                 this.$message({
@@ -252,18 +250,13 @@
       /**
        * 选择的商品
        */
-      handleSelectionChange(select,val) {
+      handleSelectionChange(select, val) {
         if (!select) return false;
         this.selGoodsName = "";
         this.postInfo.goods = [];
         this.selGoodsName += val.goods_name + " ";
         this.postInfo.goods.push(val);
         this.multipleSelection.push(val);
-        // val.forEach((item, index) => {
-        //   this.selGoodsName += item.goods_name + " ";
-        //   this.postInfo.goods.push(item);
-        // });
-        // this.multipleSelection = val;
       },
       // 每页多少条切换
       handleSizeChange(page_size) {

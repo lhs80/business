@@ -26,7 +26,14 @@
         </ul>
       </el-form-item>
       <el-form-item label="选择图片" prop="logo">
-        <el-upload class="upload-demo" action="/file_upload" :data="imgType" list-type="picture" :on-success="uploadSuccess">
+        <el-upload
+          class="upload-demo"
+          action="http://sht.qicheen.com/file_upload"
+          :data="imgType"
+          list-type="picture"
+          :on-success="uploadSuccess"
+          :with-credentials="true"
+        >
           <el-button size="small" type="primary">点击上传</el-button>
           <span slot="tip" class="el-upload__tip prl1">只能上传jpg/png文件，且不超过500kb</span>
         </el-upload>
@@ -222,11 +229,10 @@
        */
       handleSelectionChange(select, val) {
         if (!select) return false;
-        this.selGoodsName = "";
-        this.postInfo.goods = [];
-        this.selGoodsName += val.goods_name + " ";
+        this.selGoodsName += val.goods_name + ";";
         this.postInfo.goods.push(val);
         this.multipleSelection.push(val);
+        console.log("items", this.multipleSelection)
       },
       // 每页多少条切换
       handleSizeChange(page_size) {
