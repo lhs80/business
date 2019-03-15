@@ -254,7 +254,8 @@
         if (!select) return false;
         this.selGoodsName += val.goods_name + " ";
         this.postInfo.goods.push(val);
-        this.multipleSelection.push(val);
+        // this.multipleSelection.push(val);
+        // console.log("multipleSelection", this.multipleSelection);
       },
       // 每页多少条切换
       handleSizeChange(page_size) {
