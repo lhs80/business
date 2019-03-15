@@ -252,8 +252,6 @@
        */
       handleSelectionChange(select, val) {
         if (!select) return false;
-        this.selGoodsName = "";
-        this.postInfo.goods = [];
         this.selGoodsName += val.goods_name + " ";
         this.postInfo.goods.push(val);
         this.multipleSelection.push(val);
