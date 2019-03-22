@@ -65,7 +65,7 @@
     <aside class="order-panel mt2" v-for="(item,index) in orderList" :key="index">
       <el-row class="bg-grey h6 prl2 ptb1">
         <el-col :span="18">
-          <input :id="index" type="checkbox" v-model='ids' :value="item.order_id"/>
+          <input :id="index" type="checkbox" v-model='ids' :value="item.order_id" />
           <span class="text-muted prl1">订单编号：{{item.order_id}}</span>
         </el-col>
         <el-col :span="6" class="text-right text-info">
@@ -78,7 +78,7 @@
           <table style="width:100%">
             <tr v-for="(gooditem,key) in item.goods" :key="key">
               <td style="width:50px">
-                <img width="50px" height="50px" :src="gooditem.logo"/>
+                <img width="50px" height="50px" :src="gooditem.logo" />
               </td>
               <td class="prl1">
                 <h6>{{gooditem.goods_name}}</h6>
@@ -153,6 +153,8 @@
     <div class="ptb2">
       <el-button type="primary" @click="isShowSendPanel=true">选择打印模板</el-button>
       <el-button type="primary" @click="deliveSetting">打印电子面单</el-button>
+      <el-button type="primary" @click="printFHD">打印发货单</el-button>
+      <el-button type="primary" @click="deliveSetting">一键发货</el-button>
     </div>
     <!--暂无数据-->
     <div class="text-center mt2 text-muted h5" v-if="!orderList.length">暂时没有任何订单!</div>
@@ -248,9 +250,10 @@
     allExpressFun,
     eleSheetModelListFun,
     addressListFun,
-    deliveSettingFun
-  } from "@/api/activity"
-  import Vue from "vue"
+    deliveSettingFun,
+    printFHDFun
+  } from '@/api/activity'
+  import Vue from 'vue'
   import Print from 'vue-print-nb'
 
   Vue.use(Print);
@@ -262,22 +265,22 @@
         isShowSendPanel: false,
         isShowDelive: false,
         isShowPrintView: false,
-        printContent: "",
+        printContent: '',
         searchKey: '',
-        orderStatus: "2",
+        orderStatus: '2',
         orderList: [],
         addressList: [],
         sheetList: [],
-        isSearchByTime: "cdate",
-        timeRange: "",
-        searchType: "order_id",
+        isSearchByTime: 'cdate',
+        timeRange: '',
+        searchType: 'order_id',
         paginations: {
           page_index: 1, // 当前位于哪页
           total: 0, // 总条数`
           page_count: 0,//总页数
           page_size: 5, // 1页显示多少条
           pageSizes: [5, 10, 15, 20], //每页显示多少条
-          layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
+          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
         },
         pickerOptions2: {
           shortcuts: [{
@@ -308,12 +311,12 @@
         },
         ids: [],
         checked: false,
-        sendAddress: "",//选择的发件人模板
-        eleSheetModel: "",//选择的电子模板
+        sendAddress: '',//选择的发件人模板
+        eleSheetModel: '',//选择的电子模板
         printInfo: {
-          order_id: "",
-          SenderAddressTempId: "",
-          eOrderTempId: ""
+          order_id: '',
+          SenderAddressTempId: '',
+          eOrderTempId: ''
         },
       };
     },
@@ -336,7 +339,7 @@
        */
       getAllAddress() {
         addressListFun().then(res => {
-          console.log("address", res);
+          console.log('address', res);
           if (res.data.success) {
             this.addressList = res.data.data;
           }
@@ -347,7 +350,7 @@
        */
       eleSheetModelList() {
         eleSheetModelListFun().then(res => {
-          console.log("sheetlist", res);
+          console.log('sheetlist', res);
           if (res.data.success) {
             this.sheetList = res.data.data;
           }
@@ -369,7 +372,7 @@
           uid: this.$route.query.uid
         };
         orderListFun(params).then(res => {
-          console.log("order", res.data);
+          console.log('order', res.data);
           if (res.data.success) {
             this.orderList = res.data.data.data;
             this.paginations.page_count = res.data.data.pageinfo.totalpage;
@@ -398,11 +401,11 @@
       payType(type) {
         switch (type) {
           case 0:
-            return "未支付";
+            return '未支付';
           case 1:
-            return "微信";
+            return '微信';
           case 2:
-            return "支付宝";
+            return '支付宝';
         }
       },
       /**
@@ -411,17 +414,17 @@
       orderType(type) {
         switch (type) {
           case 0:
-            return "已取消";
+            return '已取消';
           case 1:
-            return "<span class='text-danger'>待支付</span>";
+            return '<span class=\'text-danger\'>待支付</span>';
           case 2:
-            return "<span class='text-info'>待发货</span>";
+            return '<span class=\'text-info\'>待发货</span>';
           case 3:
-            return "<span class='text-warning'>待收货</span>";
+            return '<span class=\'text-warning\'>待收货</span>';
           case 4:
-            return "<span class='text-success'>已完成</span>";
+            return '<span class=\'text-success\'>已完成</span>';
           case -1:
-            return "<span>已关闭</span>";
+            return '<span>已关闭</span>';
         }
       },
       // 上下分页
@@ -460,28 +463,45 @@
        * 打印电子面单
        * */
       deliveSetting() {
-        if (!this.printInfo.order_id) {
+        if (!this.ids.length) {
           this.$message({
             message: '请选择商品！',
             type: 'warning'
           });
+          return false;
         }
         if (!this.printInfo.SenderAddressTempId || !this.printInfo.eOrderTempId) {
           this.$message({
             message: '请先设置打印模板！',
             type: 'warning'
           });
+          return false;
         }
         this.ids.forEach((item, index) => {
           this.printInfo.order_id = item;
           deliveSettingFun(this.printInfo).then(res => {
             console.log(res);
             if (res.data.success) {
-              this.printContent += res.data.data + "<br/><br/>";
+              this.printContent += res.data.data + '<br/><br/>';
             }
           })
         });
         this.isShowPrintView = true;
+      },
+      printFHD() {
+        if (!this.ids.length) {
+          this.$message({
+            message: '请选择订单！',
+            type: 'warning'
+          });
+          return false;
+        }
+        let params={
+          order_id:this.ids
+        };
+        printFHDFun(params).then(res => {
+          console.log(res)
+        })
       }
     }
   };

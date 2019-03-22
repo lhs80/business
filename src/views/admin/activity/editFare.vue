@@ -54,7 +54,7 @@
         <el-button @click="$router.push('/admin/fare')">返回列表</el-button>
       </el-form-item>
     </el-form>
-    <!--选择商品弹框-->
+    <!--新增时选择地区弹框-->
     <div tabindex="-1" role="dialog" aria-modal="true" aria-label="提示" class="el-message-box__wrapper"
          style="z-index: 99;" v-show="isShowAreaList">
       <div class="el-message-box el-message-box--center" style="width:400px">
@@ -78,7 +78,11 @@
               </div>
             </el-col>
             <el-col :span="12">
-              <h5>城市</h5>
+              <h5>城市
+                <span>
+                  <el-checkbox @change="checked=>selectAllCity(checked)" v-model="isAllCheck">全部</el-checkbox>
+                </span>
+              </h5>
               <div style="height:200px;overflow:auto">
                 <p v-for="(item,index) in city" :key="index">
                   <el-checkbox @change="checked=>cityChange(checked,item.name)" v-model="item.isSel">
@@ -101,7 +105,7 @@
         </div>
       </div>
     </div>
-    <!--选择商品弹框-->
+    <!--编辑时选择地区弹框-->
     <div tabindex="-1" role="dialog" aria-modal="true" aria-label="提示" class="el-message-box__wrapper"
          style="z-index: 99;" v-show="isShowEditAreaList">
       <div class="el-message-box el-message-box--center" style="width:400px">
@@ -126,7 +130,11 @@
               </div>
             </el-col>
             <el-col :span="12">
-              <h5>城市</h5>
+              <h5>城市
+                <span>
+                  <el-checkbox @change="checked=>selectAllCity(checked)" v-model="isAllCheck">全部</el-checkbox>
+                </span>
+              </h5>
               <div style="height:200px;overflow:auto">
                 <p v-for="(item,index) in city" :key="index">
                   <el-checkbox @change="checked=>cityChange(checked,item.name)" v-model="item.isSel">
@@ -152,22 +160,23 @@
   </div>
 </template>
 <script>
-  import {editExpressTempFun, addExpressTempFun, getAllExpressTempFun} from "@/api/activity"
+  import {editExpressTempFun, addExpressTempFun, getAllExpressTempFun} from '@/api/activity'
   import ChinaAddress from '@/common/china_address_v4.json'
 
   export default {
     data() {
       return {
+        isAllCheck: false,
         isShowAreaList: false,
         isShowEditAreaList: false,
         groupList: [],
         province: Object.keys(ChinaAddress),
         city: [],
         selectCity: [],
-        editAreaIndex: "",
+        editAreaIndex: '',
         fareInfo: {
           temp_id: this.$route.query.id,
-          name: "",
+          name: '',
           is_defult: 1,
           items: [],
           type: 1
@@ -183,7 +192,7 @@
       };
     },
     mounted() {
-      this.city.push({name: Object.keys(ChinaAddress["北京市"])[0], isSel: false});
+      this.city.push({name: Object.keys(ChinaAddress['北京市'])[0], isSel: false});
       this.getAllFare();
     },
     methods: {
@@ -212,8 +221,8 @@
               if (res.data.success) {
                 this.$message({
                   showClose: true,
-                  message: "编辑成功",
-                  type: "success",
+                  message: '编辑成功',
+                  type: 'success',
                   center: true
                 });
                 this.$router.push('/admin/fare')
@@ -226,9 +235,19 @@
       },
       provinceChange(value) {
         this.city = [];
+        this.isAllCheck = false;
         Object.keys(ChinaAddress[value]).forEach((item, index) => {
           this.city.push({name: item, isSel: false});
         })
+      },
+      cityChange(checked, value) {
+        if (checked) {
+          this.selectCity.push(value);
+        }
+        else {
+          this.selectCity.splice(this.selectCity.indexOf(value), 1);
+        }
+        this.isAllCheck = this.city.length === this.selectCity.length;
       },
       editProvinceChange(value) {
         this.city = [];
@@ -241,25 +260,20 @@
             item.isSel = true;
             this.selectCity.push(item.name);
           }
-        })
-      },
-      cityChange(checked, value) {
-        if (checked)
-          this.selectCity.push(value);
-        else
-          this.selectCity.splice(this.selectCity.indexOf(value), 1);
+        });
+        this.isAllCheck = this.city.length === this.selectCity.length;
       },
       addArea() {
         if (!this.selectCity.length) {
           this.$message({
             showClose: true,
-            message: "没有选择城市",
-            type: "warning",
+            message: '没有选择城市',
+            type: 'warning',
             center: true
           });
           return false;
         }
-        this.city.push({name: Object.keys(ChinaAddress["北京市"])[0], isSel: false});
+        this.city.push({name: Object.keys(ChinaAddress['北京市'])[0], isSel: false});
         this.fareInfo.items.push({
           city: this.selectCity,
           base_count: 0,
@@ -274,14 +288,19 @@
         if (!this.selectCity.length) {
           this.$message({
             showClose: true,
-            message: "没有选择城市",
-            type: "warning",
+            message: '没有选择城市',
+            type: 'warning',
             center: true
           });
           return false;
         }
-        this.city.push({name: Object.keys(ChinaAddress["北京市"])[0], isSel: false})
-        this.fareInfo.items[this.editAreaIndex].city = this.selectCity;
+        this.city.push({name: Object.keys(ChinaAddress['北京市'])[0], isSel: false});
+        this.fareInfo.items[this.editAreaIndex].city = [];
+        this.selectCity.forEach((item, index) => {
+          this.fareInfo.items[this.editAreaIndex].city.push(item);
+        });
+        this.fareInfo.items[this.editAreaIndex].city = Array.from(new Set(this.fareInfo.items[this.editAreaIndex].city));
+
         this.selectCity = [];
         this.isShowEditAreaList = false;
       },
@@ -291,6 +310,27 @@
       editSelectArea(index) {
         this.isShowEditAreaList = true;
         this.editAreaIndex = index;
+        this.city = [];
+        this.isAllCheck = false;
+        this.city.push({
+          name: Object.keys(ChinaAddress['北京市'])[0],
+          isSel: this.fareInfo.items[this.editAreaIndex].city.indexOf('北京市') >= 0
+        });
+      },
+      selectAllCity(checked) {
+        if (checked) {
+          this.city.forEach((item, index) => {
+            item.isSel = true;
+            this.selectCity.push(item.name);
+          })
+        }
+        else {
+          this.city.forEach((item, index) => {
+            item.isSel = false;
+            this.selectCity.splice(this.selectCity.indexOf(item.name), 1);
+          })
+
+        }
       }
     }
   };

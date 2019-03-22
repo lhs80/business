@@ -669,6 +669,41 @@ export function delExpressTempFun(data) {
   });
 }
 
+/**
+ * 获取打印机信息
+ **/
+export function getPrintInfoFun(params) {
+  return request({
+    url: urlCol.print.get.url,
+    method: 'get',
+    params
+  });
+}
+
+
+/**
+ * 设置打印机信息
+ **/
+export function setPrintInfoFun(data) {
+  return request({
+    url: urlCol.print.set.url,
+    method: 'post',
+    data
+  });
+}
+
+
+/**
+ * 打印发货单
+ **/
+export function printFHDFun(data) {
+  return request({
+    url: urlCol.express.printHFD.url,
+    method: 'post',
+    data
+  });
+}
+
 
 /**********************************超管*************************************/
 
