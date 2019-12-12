@@ -11,7 +11,8 @@
           </el-button>
           <el-button type="primary" size="small" @click="changeGoodStatus(0)" v-if="$route.query.type===4">恢复到仓库
           </el-button>
-          <el-button type="primary" size="small" @click="delMulGoods">删除</el-button>
+          <el-button type="primary" size="small" @click="delMulGoods" v-if="$route.query.type!==4">删除</el-button>
+          <el-button type="primary" size="small" @click="realDelMulGoods" v-else>删除</el-button>
           <el-button type="primary" size="small" @click="wantToChangeType">批量分类</el-button>
         </el-col>
         <el-col :span="12" class="text-right">
@@ -39,7 +40,7 @@
         <!--<el-table-column sortable property="goods_id" label="排序" width="120" align="center"></el-table-column>-->
         <el-table-column property="logo" label="商品">
           <template slot-scope="scope">
-            <img :src=scope.row.logo style="height:60px;width:60px;vertical-align:middle"/>
+            <img :src=scope.row.logo style="height:60px;width:60px;vertical-align:middle" />
             <span class="prl1">{{scope.row.goods_name}}</span>
           </template>
         </el-table-column>
@@ -57,7 +58,7 @@
             <el-tag v-if="scope.row.status===2">已售空</el-tag>
             <el-tag type="danger" v-if="scope.row.status===3">已售空</el-tag>
             <el-tag type="danger" v-if="scope.row.status===-1">下架</el-tag>
-            <el-tag class="mt1" type="warning"  v-if="scope.row.is_audit===0">审核中</el-tag>
+            <el-tag class="mt1" type="warning" v-if="scope.row.is_audit===0">审核中</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
@@ -123,18 +124,18 @@
 </template>
 
 <script>
-  import {getGoodsList, setGoodsStatus, delGoods, getGoodsCat, batchSetGoodsCatFun} from "@/api/activity";
+  import {getGoodsList, setGoodsStatus, delGoods, getGoodsCat, batchSetGoodsCatFun} from '@/api/activity';
 
   export default {
-    name: "onOnffer",
+    name: 'onOnffer',
     data: () => {
       return {
         isShowEditType: false,
-        searchKey: "",
+        searchKey: '',
         tableData: [],
         goodTypes: [],
-        multipleSelection: "",
-        changeStatue: "",
+        multipleSelection: '',
+        changeStatue: '',
         //需要给分页组件传的信息
         paginations: {
           page_index: 1, // 当前位于哪页
@@ -142,7 +143,7 @@
           page_count: 0,//总页数
           page_size: 10, // 1页显示多少条
           pageSizes: [5, 10, 15, 20], //每页显示多少条
-          layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
+          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
         }
       };
     },
@@ -151,7 +152,7 @@
       this.getAllGoodsType();
     },
     watch: {
-      "$route": "getData"
+      '$route': 'getData'
     },
     methods: {
       wantToChangeType() {
@@ -160,8 +161,8 @@
         else
           this.$message({
             showClose: true,
-            message: "请先选择产品",
-            type: "success"
+            message: '请先选择产品',
+            type: 'success'
           });
       },
       getData() {
@@ -173,7 +174,7 @@
           pageIndex: this.paginations.page_index,
         };
         getGoodsList(params).then(res => {
-          console.log("goods", res);
+          console.log('goods', res);
           if (res.data.success) {
             this.tableData = res.data.data.data;
             this.paginations.page_count = res.data.data.pageinfo.totalpage;
@@ -210,9 +211,9 @@
       },
       //修改产品状态
       changeGoodStatus(status) {
-        let ids = "", _this = this;
+        let ids = '', _this = this;
         this.multipleSelection.forEach((item, index) => {
-          ids += item.goods_id + ",";
+          ids += item.goods_id + ',';
         });
         let params = {
           goods_id: ids,
@@ -237,9 +238,9 @@
         })
       },
       delMulGoods() {
-        let ids = "", _this = this;
+        let ids = '', _this = this;
         this.multipleSelection.forEach((item, index) => {
-          ids += item.goods_id + ",";
+          ids += item.goods_id + ',';
         });
         let params = {
           goods_id: ids,
@@ -263,6 +264,21 @@
           }
         })
       },
+      realDelMulGoods() {
+        let ids = '', _this = this;
+        this.multipleSelection.forEach((item, index) => {
+          ids += item.goods_id + ',';
+        });
+        let params = {
+          goods_id: ids,
+          is_real: 1
+        };
+        delGoods(params).then(res => {
+          if (res.data.success) {
+            _this.getData();
+          }
+        })
+      },
       realDelSingleGood(id) {
         let _this = this;
         let params = {
@@ -276,9 +292,9 @@
         })
       },
       batchSetGoodsCat() {
-        let goodIds = "";
+        let goodIds = '';
         this.multipleSelection.forEach((item, index) => {
-          goodIds += item.good_id + ","
+          goodIds += item.good_id + ','
         });
         let params = {
           goods_id: goodIds,
@@ -289,8 +305,8 @@
           if (res.data.success) {
             this.$message({
               showClose: true,
-              message: "批量修改分类成功",
-              type: "success"
+              message: '批量修改分类成功',
+              type: 'success'
             });
             this.getData();
             this.isShowEditType = false;

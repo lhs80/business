@@ -79,8 +79,8 @@
     </div>
     <!--选择品牌弹框-->
     <div tabindex="-1" role="dialog" aria-modal="true" aria-label="提示" class="el-message-box__wrapper"
-         style="z-index: 99;" v-show="isShowCommidyList">
-      <div class="el-message-box el-message-box--center" style="width:60%">
+         style="z-index: 99" v-show="isShowCommidyList">
+      <div class="el-message-box el-message-box--center" style="width:60%;height:400px;overflow-y:auto">
         <div class="bg-grey">
           <el-row class="prl2">
             <el-col :span="12" class="h5">数据选择器</el-col>

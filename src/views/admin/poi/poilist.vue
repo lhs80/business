@@ -130,13 +130,13 @@
 </template>
 
 <script>
-  import {getAllClient, updateClientLevelFun, getClientLevelListFun} from "@/api/poi";
+  import {getAllClient, updateClientLevelFun, getClientLevelListFun} from '@/api/poi';
 
   export default {
-    name: "kehuList",
+    name: 'kehuList',
     data: () => {
       return {
-        searchKey: "",
+        searchKey: '',
         isShowEditLevel: false,
         isShowClientDetail: false,
         clientList: [],
@@ -152,7 +152,7 @@
           page_size: 20, // 1页显示多少条
           page_sizes: [5, 10, 15, 20], //每页显示多少条
           pager_count: 0,
-          layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
+          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
         }
       };
     },
@@ -166,11 +166,11 @@
        */
       getClientLevel() {
         getClientLevelListFun().then(res => {
-          console.log("level", res);
+          console.log('level', res);
           if (res.data.success) {
             this.clientLevelList = res.data.data;
-            this.paginations.total = res.data.data.count;
-            this.paginations.page_count = res.data.data.totalpage
+            this.paginations.total = res.data.pageinfo.count;
+            this.paginations.page_count = res.data.pageinfo.totalpage
           }
         })
       },
@@ -182,7 +182,7 @@
       getClientList() {
         let params = `?searchKey=${this.searchKey}&pageSize=${this.paginations.page_size}&pageIndex=${this.paginations.page_index}`;
         getAllClient(params).then(res => {
-          console.log("client", res);
+          console.log('client', res);
           if (res.data.success) {
             this.clientList = res.data.data.data;
             this.paginations.pager_count = res.data.data.pageinfo.totalpage;
@@ -208,16 +208,18 @@
       // 每页多少条切换
       handleSizeChange(page_size) {
         this.paginations.page_size = page_size;
+        this.getClientList();
       },
       // 上下分页
       handleCurrentChange(page) {
-        this.paginations.page_index = page - 1;
+        this.paginations.page_index = page;
+        this.getClientList();
       },
       onSubmit() {
-        let uids = "";
+        let uids = '';
         console.log(this.multipleSelection);
         this.multipleSelection.forEach((item, index) => {
-          uids += item.uid + ",";
+          uids += item.uid + ',';
         });
         let params = {
           level_id: this.form.level,
@@ -227,8 +229,8 @@
           if (res.data.success) {
             this.$message({
               showClose: true,
-              message: "修改等级成功",
-              type: "success",
+              message: '修改等级成功',
+              type: 'success',
               center: true
             });
             this.isShowEditLevel = false;

@@ -8,7 +8,6 @@ import errorCode from "@/common/constant/errorCode";
 import NProgress from "nprogress";
 import { rootUrl, baseURL } from "@/common/constant/constant";
 
-console.log("URL",baseURL)
 import urlCol from "@/common/urlCol";
 // progress bar
 import "nprogress/nprogress.css";

@@ -108,49 +108,49 @@
   </section>
 </template>
 <script>
-  import {getGoodsList, getBrand, queryPostDetailFun, updatePostFun} from "@/api/activity"
+  import {getGoodsList, getBrand, queryPostDetailFun, updatePostFun} from '@/api/activity'
 
   export default {
     data() {
       return {
-        imgType: {type: "merchant"},
+        imgType: {type: 'merchant'},
         catId: '',//分类ID
         searchKey: '',
         isShowCommidyList: false,
         selGoodsName: '',//选择的商品名称
         goodList: [],//所有商品列表
         brandList: [],//所有品牌列表
-        postTypeList: [{name: "商品海报", id: 1}],
+        postTypeList: [{name: '商品海报', id: 1}],
         postInfo: {
           posterId: this.$route.query.id,
-          poster_name: "",
-          logo: "",
+          poster_name: '',
+          logo: '',
           goods: [],
-          type: "",
+          type: '',
         },
         rules: {
           poster_name: [
-            {required: true, message: "请输入活动名称", trigger: "blur"},
-            {min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur"}
+            {required: true, message: '请输入活动名称', trigger: 'blur'},
+            {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
           ],
           goods: [
             {
-              type: "array",
+              type: 'array',
               required: true,
-              message: "请至少选择一个商品",
-              trigger: "change"
+              message: '请至少选择一个商品',
+              trigger: 'change'
             }
           ],
           type: [
             {
-              type: "array",
+              type: 'array',
               required: true,
-              message: "请至少选择一个活动性质",
-              trigger: "change"
+              message: '请至少选择一个活动性质',
+              trigger: 'change'
             }
           ],
           logo: [
-            {required: true, message: "请选择海报图片", trigger: "blur"}
+            {required: true, message: '请选择海报图片', trigger: 'blur'}
           ],
         },
         // 选择的商品
@@ -161,7 +161,7 @@
           page_count: 0,//总页数
           page_size: 5, // 1页显示多少条
           pageSizes: [5, 10, 15, 20], //每页显示多少条
-          layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
+          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
         },
       };
     },
@@ -179,13 +179,12 @@
           posterId: this.$route.query.id
         };
         queryPostDetailFun(params).then(res => {
-          console.log("detail", res);
           if (res.data.success) {
             this.postInfo = res.data.data;
             this.postInfo.type = [res.data.data.type];
             this.multipleSelection = res.data.data.goods;
             this.multipleSelection.forEach((item, index) => {
-              this.selGoodsName += item.goods_name + " ";
+              this.selGoodsName += item.goods_name + ' ';
             });
           }
         })
@@ -235,14 +234,14 @@
               if (res.data.success) {
                 this.$message({
                   showClose: true,
-                  message: "更新海报成功",
-                  type: "success"
+                  message: '更新海报成功',
+                  type: 'success'
                 });
-                this.$refs["postInfo"].resetFields();
+                this.$refs['postInfo'].resetFields();
               }
             })
           } else {
-            console.log("error submit!!");
+            console.log('error submit!!');
             return false;
           }
         });
@@ -251,11 +250,21 @@
        * 选择的商品
        */
       handleSelectionChange(select, val) {
-        if (!select) return false;
-        this.selGoodsName += val.goods_name + " ";
-        this.postInfo.goods.push(val);
+        // if (!select) return false;
+        // this.selGoodsName += val.goods_name + ' ';
+        // this.postInfo.goods.push(val);
         // this.multipleSelection.push(val);
         // console.log("multipleSelection", this.multipleSelection);
+        if (select.indexOf(val) >= 0) {
+          this.selGoodsName += val.goods_name + ' '
+          this.postInfo.goods.push(val)
+          // this.multipleSelection.push(val)
+          console.log(this.multipleSelection)
+        } else {
+          this.selGoodsName = this.selGoodsName.replace(val.goods_name, ' ')
+          this.postInfo.goods.splice(this.postInfo.goods.findIndex(item => item.id === val.goods_id), 1)
+          // this.multipleSelection.splice(this.multipleSelection.findIndex(item => item.id === val.goods_id), 1)
+        }
       },
       // 每页多少条切换
       handleSizeChange(page_size) {

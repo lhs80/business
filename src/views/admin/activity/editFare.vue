@@ -241,6 +241,7 @@
         })
       },
       cityChange(checked, value) {
+        console.log(this.selectCity);
         if (checked) {
           this.selectCity.push(value);
         }
@@ -250,6 +251,7 @@
         this.isAllCheck = this.city.length === this.selectCity.length;
       },
       editProvinceChange(value) {
+        console.log(this.fareInfo.items[this.editAreaIndex].city)
         this.city = [];
         Object.keys(ChinaAddress[value]).forEach((item, index) => {
           this.city.push({name: item, isSel: false});
@@ -295,7 +297,7 @@
           return false;
         }
         this.city.push({name: Object.keys(ChinaAddress['北京市'])[0], isSel: false});
-        this.fareInfo.items[this.editAreaIndex].city = [];
+        // this.fareInfo.items[this.editAreaIndex].city = [];
         this.selectCity.forEach((item, index) => {
           this.fareInfo.items[this.editAreaIndex].city.push(item);
         });
@@ -329,7 +331,6 @@
             item.isSel = false;
             this.selectCity.splice(this.selectCity.indexOf(item.name), 1);
           })
-
         }
       }
     }

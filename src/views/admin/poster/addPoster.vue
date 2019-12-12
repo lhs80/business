@@ -228,11 +228,20 @@
        * 选择的商品
        */
       handleSelectionChange(select, val) {
-        if (!select) return false;
-        this.selGoodsName += val.goods_name + ";";
-        this.postInfo.goods.push(val);
-        this.multipleSelection.push(val);
-        console.log("items", this.multipleSelection)
+        // if (!select) return false;
+        // this.selGoodsName += val.goods_name + ";";
+        // this.postInfo.goods.push(val);
+        // this.multipleSelection.push(val);
+        // console.log("items", this.multipleSelection)
+        if (select.indexOf(val) >= 0) {
+          this.selGoodsName += val.goods_name + ' '
+          this.postInfo.goods.push(val)
+          this.multipleSelection.push(val)
+        } else {
+          this.selGoodsName=this.selGoodsName.replace(val.goods_name, ' ')
+          this.postInfo.goods.splice(this.postInfo.goods.findIndex(item => item.id === val.goods_id), 1)
+          this.multipleSelection.splice(this.multipleSelection.findIndex(item => item.id === val.goods_id), 1)
+        }
       },
       // 每页多少条切换
       handleSizeChange(page_size) {
