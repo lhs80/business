@@ -84,6 +84,15 @@ export default [{
 
 // 超级管理员
   {
+    path: '/superAdmin/followList',
+    component: Layout,
+    children: [{
+      path: "detail",
+      name: "客户详情",
+      component: _import('superAdmin/follow/cus-detail', 'views')
+    }]
+  },
+  {
     path: '/suOnOffer',
     name: '待审核',
     component: _import('superAdmin/goods/onOffer', 'views')
@@ -251,7 +260,6 @@ export default [{
   {
     path: '/address',
     component: Layout,
-    // redirect: "/addaddress/add",
     children: [{
       path: "add",
       name: "新增店铺地址",
