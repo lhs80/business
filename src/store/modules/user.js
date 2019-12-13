@@ -1141,7 +1141,7 @@ const user = {
               url: "",
               spread: false,
               path: "suClientList",
-              component: "views/superAdmin/suClient/suClientList",
+              component: "views/superAdmin/follow/listy",
               authority: null,
               redirect: null,
               code: null,
