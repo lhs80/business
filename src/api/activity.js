@@ -1048,3 +1048,125 @@ export function adminIndexData() {
 }
 
 
+/**
+ * 客户公海--客户列表
+ * */
+export function openCustomerList(params) {
+  return request({
+    url: urlCol.open.sheet.list.url,
+    method: "get",
+    params
+  })
+}
+
+/**
+ * 客户公海--导入客户
+ * */
+export function exportCustomerFun(data) {
+  return request({
+    url: urlCol.open.sheet.export.url,
+    method: "post",
+    data
+  })
+}
+
+/**
+ * 客户公海--删除客户
+ * */
+export function delOpenCustomer(data) {
+  return request({
+    url: urlCol.open.sheet.del.url,
+    method: "post",
+    data
+  })
+}
+
+/**
+ * 客户公海--转入到我的跟进客户
+ * */
+export function changeToMyCustomerFun(data) {
+  return request({
+    url: urlCol.open.sheet.changeToMyCustomer.url,
+    method: "post",
+    data
+  })
+}
+
+/**
+ * 跟进客户--成交客户
+ * */
+export function followDoneListFun(params) {
+  return request({
+    url: urlCol.follow.sheet.donelist.url,
+    method: "get",
+    params
+  })
+}
+
+/**
+ * 跟进客户--我的跟进客户
+ * */
+export function followMyListFun(params) {
+  return request({
+    url: urlCol.follow.sheet.myList.url,
+    method: "get",
+    params
+  })
+}
+
+/**
+ * 跟进客户--添加跟进
+ * */
+export function addFollowRecordFun(data) {
+  return request({
+    url: urlCol.follow.sheet.addFollowRecord.url,
+    method: "post",
+    data
+  })
+}
+
+/**
+ * 跟进客户--添加我的客户
+ * */
+export function addMyCustomerFun(data) {
+  return request({
+    url: urlCol.follow.sheet.addMyCustomer.url,
+    method: "post",
+    data
+  })
+}
+
+/**
+ * 跟进客户--客户详情
+ * */
+export function queryCustomDetailFun(params) {
+  return request({
+    url: urlCol.follow.sheet.customerDetail.url,
+    method: "get",
+    params
+  })
+}
+
+/**
+ * 跟进客户--我的成交客户订单列表
+ * */
+export function queryCustomOrderListFun(params) {
+  return request({
+    url: urlCol.follow.sheet.customerOrderList.url,
+    method: "get",
+    params
+  })
+}
+
+/**
+ * 跟进客户--我的成交客户交易列表
+ * */
+export function getMyCustomerOrdersFun(params) {
+  return request({
+    url: urlCol.follow.sheet.getMyCustomerOrders.url,
+    method: "get",
+    params
+  })
+}
+
+

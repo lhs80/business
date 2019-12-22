@@ -251,7 +251,6 @@ const urlCol = {
     },
     //订单详情
     orderDetail: {
-      // url: "/mch/order/getOrderInfo"
       url: '/mch/order/getOrderInfo4admin'
     },
     //修改订单地址
@@ -408,6 +407,53 @@ const urlCol = {
     }
   },
 
+  /**
+   * 客户公海
+   */
+  open: {
+    sheet: {
+      list: {
+        url: '/mch/salesman/getPublicCustomerList'
+      },
+      export: {url: '/mch/salesman/addPublicCustomer'},
+      del: {
+        url: '/mch/salesman/delPublicCustomer'
+      },
+      changeToMyCustomer: {
+        url: "/mch/salesman/transformMyFollowCustomer"
+      }
+    },
+  },
+  /**
+   * 客户跟进
+   */
+  follow: {
+    sheet: {
+      donelist: {
+        url: '/mch/salesman/getMyDealCustomerList'
+      },
+      myList: {
+        url: "/mch/salesman/getMyCustomerList"
+      },
+      addFollowRecord: {
+        url: "/mch/salesman/addFollow"
+      },
+      addMyCustomer:{
+        url:'/mch/salesman/addmyCustomer'
+      },
+      customerDetail:{
+        url:'/mch/salesman/getSaleeCustomeDetail'
+      },
+      //订单
+      customerOrderList:{
+        url:'/mch/salesman/getSalesmanCustomerOrders'
+      },
+      //交易
+      getMyCustomerOrders:{
+        url:'/mch/customer/getMyCustomerOrders'
+      }
+    },
+  },
   /************************************超管接口*************************************/
   superAdmin: {
     goods: {
