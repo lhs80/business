@@ -266,6 +266,10 @@ table {
   color: #8f8e8e;
 }
 
+.text-grey {
+  color: #303133;
+}
+
 .text-right {
   text-align: right;
 }
@@ -388,7 +392,7 @@ h1, .h1 {
 
 .cell .el-icon-edit, .cell .el-icon-delete,
 .cell .el-icon-view, .cell .el-icon-goods,
-.cell .icon-chengyuan, .cell .el-icon-refresh ,
+.cell .icon-chengyuan, .cell .el-icon-refresh,
 .cell .el-icon-tickets {
   width: 24px;
   height: 24px;
