@@ -60,6 +60,7 @@
   import {mapGetters} from "vuex";
   import {encode, initMenu} from "@/utils/util";
   import {login, supLogin} from "@/api/activity";
+  import {setStore} from "../../utils/store";
 
   export default {
     name: "userlogin",
@@ -109,18 +110,26 @@
           _this.$refs.loginForm.validate(valid => {
             if (valid) {
               login(_this.loginForm).then(response => {
-                console.log("login", response);
                 if (response.data.success) {
-                  console.log("roleId", response.data.data.roleId == '6');
                   if (response.data.data.roleId === '6') {
                     _this.$store.commit("SET_LOGINTYPE", "sh-send");
+                  } else if (response.data.data.role_id === 3) {
+                    _this.$store.commit("SET_LOGINTYPE", "ywy");
+                  } else if (response.data.data.role_id === 7) {
+                    _this.$store.commit("SET_LOGINTYPE", "tdjl");
                   } else {
                     _this.$store.commit("SET_LOGINTYPE", "sh");
                   }
+                  setStore({
+                    name: 'userinfo',
+                    content: response.data.data
+                  });
+                  console.log(response.data.data);
                   _this.$store.dispatch("GetMenu").then(data => {
                     initMenu(_this.$router, data);
                     if (!_this.$route.query.path) {
                       _this.$store.commit("ADD_TAG", _this.tagWel);
+                      console.log("tagWel", _this.tagWel);
                       _this.$router.push({path: this.tagWel.value});
                     } else {
                       _this.$router.push({path: _this.$route.query.path});
@@ -143,11 +152,16 @@
               _this.$store.commit("SET_LOGINTYPE", "admin");
               supLogin(_this.loginForm).then(response => {
                 if (response.data.success) {
+                  setStore({
+                    name: 'userinfo',
+                    content: response.data.data
+                  });
                   this.$store.dispatch("GetMenu").then(data => {
                     initMenu(_this.$router, data);
                     if (!_this.$route.query.path) {
-                      console.log("tagWel", _this.tagWel);
+
                       _this.$store.commit("ADD_TAG", _this.tagWel);
+                      console.log(this.tagWel.value);
                       _this.$router.push({path: this.tagWel.value});
                     } else {
                       _this.$router.push({path: _this.$route.query.path});
