@@ -8,7 +8,7 @@
 		  <div id="test-n1"></div>
 		</div>
   </div>
-  
+
 </template>
 con
 <script>
@@ -16,8 +16,8 @@ con
   export default {
 	data(){
 			return {
-				 
-				 
+
+
 		     };
 	},
 	computed: {
@@ -25,7 +25,7 @@ con
 	filters: {
 	},
 	created() {
-		
+
 	},
 	mounted:function(){
 	  laydate.render({
@@ -47,7 +47,7 @@ con
 	  });
 	},
 	methods: {
-		
+
 	}
 };
 

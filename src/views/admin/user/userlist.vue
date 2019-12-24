@@ -568,7 +568,7 @@ export default {
 
 <style>
 .user-element-select {
-  width: "30px";
+  width: 30px;
   display: inline-block;
 }
 .float-left {
