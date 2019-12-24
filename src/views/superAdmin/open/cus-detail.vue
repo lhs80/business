@@ -336,8 +336,6 @@
 			checkFollow(id) {
 				let params = {
 					id,
-					pageIndex: this.paginations.page_index,
-					pageSize: this.paginations.page_size
 				};
 				queryCustomerTrendsFun(params).then(res => {
 					if (res.data.success) {
