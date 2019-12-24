@@ -69,7 +69,7 @@
                 @size-change="handleSizeChange"
         ></el-pagination>
         <!--    导入客户-->
-        <el-dialog title="导入客户" :visible="showExportCustomer">
+        <el-dialog title="导入客户" :visible="showExportCustomer" :show-close="false">
             <el-form :model="customerInfo">
                 <el-form-item label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="customerInfo.name" autocomplete="off"></el-input>

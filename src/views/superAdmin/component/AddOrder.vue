@@ -1,16 +1,16 @@
 <template>
     <!--添加订单-->
-    <el-dialog title="添加订单" :visible="show" top="5vh">
+    <el-dialog title="添加订单" :visible="show" top="5vh" :show-close="false">
         <el-row :gutter="10">
             <el-col :span="12">
                 <div>
                     <label class="h6">选择品牌：</label>
                     <div style="display:inline-block">
-                        <el-select size="small" placeholder="请选择" @change="queryProductList">
-                            <el-option v-for="(item,index) in brands"
+                        <el-select v-model="brandId" size="small" placeholder="请选择" @change="queryProductList">
+                            <el-option v-for="(item,index) in brandList"
                                        :value="item.poster_id"
                                        :key="index"
-                                       :label="item.poster_name">{{item.poster_name}}
+                                       :label="item.poster_name">
                             </el-option>
                         </el-select>
                     </div>
@@ -18,17 +18,15 @@
                 <div class="mt2">
                     <label class="h6">选择商品：</label>
                     <div style="display:inline-block">
-                        <el-select placeholder="请选择" size="small">
-                            <el-option label="微信" value="1"></el-option>
-                            <el-option label="电话" value="2"></el-option>
-                            <el-option label="其他" value="3"></el-option>
+                        <el-select v-model="prodId" placeholder="请选择" size="small" @change="queryProductDetail">
+                            <el-option v-for="(item,index) in prodList" :label="item.goods_name" :value="item.goods_id" :key="index"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="mt4">
-                    <el-row v-for="(item,index) in norms" class="mt2">
+                    <el-row v-for="(item,index) in prodInfo.normMap" class="mt2" :key="index">
                         <el-col :span="8">
-                            <el-tag>{{item.name}}</el-tag>
+                            <el-tag>{{item.norm_name}}</el-tag>
                         </el-col>
                         <el-col :span="12">
                             <el-input-number v-model="item.orderNum" label="描述文字" size="small"></el-input-number>
@@ -81,14 +79,14 @@
 </template>
 
 <script>
-	import {queryPostDetailFun} from '@/api/activity'
+	import {queryPostDetailFun, queryGoodsDetailFun} from '@/api/activity'
 
 	export default {
 		props: ['show', 'brandList'],
 		data() {
 			return {
-				isShow: this.show,
-				brands: this.brandList,
+				brandId: '',
+				prodId: '',
 				norms: [{
 					name: '黄色',
 					orderNum: 0
@@ -100,13 +98,31 @@
 					orderNum: 0
 				}],
 				cartList: [],
+				prodList: [],
+				prodInfo: {}
 			}
 		},
 		methods: {
 			//根据品牌查商品
 			queryProductList(value) {
-				queryPostDetailFun().then(res => {
-
+				let params = {
+					posterId: value
+				};
+				queryPostDetailFun(params).then(res => {
+					if (res.data.success) {
+						this.prodList = res.data.data.goods
+					}
+				})
+			},
+			//查询商品详情
+			queryProductDetail(value) {
+				let params = {
+					goods_id: value
+				};
+				queryGoodsDetailFun(params).then(res => {
+					if (res.data.success) {
+						this.prodInfo = res.data.data;
+					}
 				})
 			},
 			//添加到进货单
@@ -125,7 +141,6 @@
 						orderNum: 10
 					}]
 				});
-				console.log(this.cartList);
 			},
 		}
 	}

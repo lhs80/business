@@ -1224,13 +1224,34 @@ export function customerSettingFUN(data) {
 	})
 }
 
-
 /**
  * 转移到客户公海
  * */
 export function releaseCustomerFun(data) {
 	return request({
 		url: urlCol.follow.sheet.release.url,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * 转移到客户公海
+ * */
+export function editCustomerInfoFun(data) {
+	return request({
+		url: urlCol.follow.sheet.cusedit.url,
+		method: 'post',
+		data
+	})
+}
+
+/**
+ * 把客户转给别的业务员
+ * */
+export function changeFollowFun(data) {
+	return request({
+		url: urlCol.follow.sheet.change.url,
 		method: 'post',
 		data
 	})

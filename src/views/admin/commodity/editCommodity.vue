@@ -372,7 +372,6 @@
           goods_id: this.$route.query.id
         };
         queryGoodsDetailFun(params).then(res => {
-          console.log("goodInfo", res);
           if (res.data.success) {
             this.goodInfo = JSON.parse(JSON.stringify(res.data.data).replace(/skus/g, 'skuArr'));
             this.goodInfo.skuArr = JSON.parse(JSON.stringify(this.goodInfo.skuArr).replace(/norm_item_arr/g, 'norms'));
@@ -381,7 +380,6 @@
             this.goodInfo.is_norm = this.goodInfo.is_norm === 1;
             this.goodInfo.normMap = this.goodInfo.normMap ? this.goodInfo.normMap : [];
             this.goodInfo.pics = this.goodInfo.content.pics == "[]" || !this.goodInfo.content.pics ? [] : this.goodInfo.content.pics;
-            console.log("goodInfo", this.goodInfo);
             this.goodInfo.normMap.forEach((item, index) => {
               this.headArray.push(item.norm_name);
             });
@@ -393,7 +391,6 @@
        */
       getAllExpressTemp() {
         getAllExpressTempFun().then(res => {
-          console.log("yunfei", res);
           if (res.data.success)
             this.postModuleList = res.data.data;
         })
@@ -403,7 +400,6 @@
        */
       getAllBrand() {
         getBrand().then(res => {
-          console.log(res);
           if (res.data.success)
             this.brandList = res.data.data;
         });
@@ -413,7 +409,6 @@
        */
       getAllGoodsType() {
         getGoodsCat().then(res => {
-          console.log(res);
           if (res.data.success)
             this.goodTypes = res.data.data;
         });
@@ -478,7 +473,7 @@
        * 删除规格项
        */
       deleteGgx(ee) {
-        console.log(ee);
+
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
@@ -490,7 +485,6 @@
        * 上传图片成功
        */
       uploadSuccess(response) {
-        console.log(response);
         if (response.success) {
           this.$forceUpdate();
           this.goodInfo.pics.push(response.data);
@@ -514,7 +508,6 @@
        */
       addNewModel() {
         makeNewNormFun().then(res => {
-          console.log(this.goodInfo);
           if (res.data.success) {
             this.goodInfo.normMap.push({
               norm_id: res.data.data.norm_id,
@@ -565,7 +558,6 @@
        * 删除规格项
        */
       removeModelSubItem(pIndex, item) {
-        console.log(this.goodInfo.normMap[pIndex]);
         let index = this.goodInfo.normMap[pIndex].items.indexOf(item);
         if (index !== -1) {
           this.goodInfo.normMap[pIndex].items.splice(index, 1)
@@ -608,7 +600,6 @@
             }
           }
         } else {
-          console.log(this.goodInfo.normMap[0]);
           for (let i = 0, len = this.goodInfo.normMap[0].items.length; i < len; i++) {
             let params = [{
               "norm_id": this.goodInfo.normMap[0].norm_id,
@@ -628,7 +619,6 @@
             dlprice: 0,
           })
         }
-        console.log("skuArr", this.goodInfo.skuArr)
       },
       addNewType(heads, choices) {
         let result = [];
@@ -647,7 +637,6 @@
             result.push(params);
           }
         }
-        console.log("result", result)
         return result;
       },
       onModelInput() {
@@ -665,7 +654,6 @@
         let quill = this.$refs.QuillEditor.quill;
         // 如果上传成功
         if (res) {
-          console.log("upload", res);
           // 获取光标所在位置
           let length = quill.getSelection().index;
           // 插入图片，res为服务器返回的图片链接地址

@@ -25,6 +25,7 @@
           <el-option label="业务员" value="3"></el-option>
           <el-option label="仓库管理员" value="4"></el-option>
           <el-option label="发货员" value="6"></el-option>
+          <el-option label="团队经理" value="7"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="团队" prop="group_id" v-show="employeeInfo.role_id==3">

@@ -471,6 +471,12 @@ const urlCol = {
 			},
 			release: {
 				url: '/mch/salesman/releaseMyFollowCustomer'
+			},
+			cusedit: {
+				url: '/mch/salesman/updateMyCustomer'
+			},
+			change: {
+				url: '/mch/salesman/transformToOtherSalesMan'
 			}
 		},
 	},

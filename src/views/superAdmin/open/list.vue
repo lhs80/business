@@ -30,10 +30,9 @@
                 <hr>
                 <el-row>
                     <el-col :span="12">
-                        <el-button type="primary" size="small">编辑</el-button>
-                        <el-button type="primary" size="small" @click="releaseCustomer">转移至客户公海</el-button>
-                        <!--            <el-button type="danger" size="small">删除</el-button>-->
-                        <el-button type="primary" size="small">转移</el-button>
+                        <el-button type="primary" size="small" :disabled="!multipleSelection.length>0" @click="todoEdit(1)">编辑</el-button>
+                        <el-button type="primary" size="small" :disabled="!multipleSelection.length>0" @click="releaseCustomer(1)">转移至客户公海</el-button>
+                        <el-button type="primary" size="small" :disabled="!multipleSelection.length>0" @click="showChangeFollower=1">转移</el-button>
                     </el-col>
                     <el-col :span="12" class="text-right">
                         <div style="width:150px;display:inline-block;">
@@ -111,11 +110,11 @@
                 <hr>
                 <el-row>
                     <el-col :span="12">
-                        <el-button type="primary" size="small" @click="">编辑</el-button>
-                        <el-button type="primary" size="small" @click="changeGoodStatus(0)">转移至客户公海</el-button>
-                        <!--            <el-button type="danger" size="small" @click="passCheck()">删除</el-button>-->
+                        <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="todoEdit(2)">编辑</el-button>
+                        <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="releaseCustomer(2)">转移至客户公海
+                        </el-button>
                         <el-button type="primary" size="small" @click="showAddOrder=true">添加订单</el-button>
-                        <el-button type="primary" size="small" @click="passCheck()">转移</el-button>
+                        <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="showChangeFollower=2">转移</el-button>
                     </el-col>
                     <el-col :span="12" class="text-right">
                         <div style="width:150px;display:inline-block;">
@@ -126,7 +125,7 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-table :data="doneCusList" stripe style="width: 100%">
+                <el-table :data="doneCusList" stripe style="width: 100%" @selection-change="doneSelectionChange">
                     <el-table-column type="selection"></el-table-column>
                     <el-table-column prop="name" label="客户姓名">
                         <template slot-scope="scope">
@@ -161,7 +160,7 @@
             </el-tab-pane>
         </el-tabs>
         <!--新增客户-->
-        <el-dialog title="新增客户" :visible="showExportCustomer" width="600px">
+        <el-dialog title="新增客户" :visible="showExportCustomer" width="600px" :show-close="false">
             <el-form :model="customerInfo">
                 <el-form-item label="姓名" :label-width="formLabelWidth">
                     <el-input size="small" v-model="customerInfo.name" autocomplete="off"></el-input>
@@ -234,9 +233,84 @@
                 <el-button @click="showExportCustomer = false">取消</el-button>
                 <el-button type="primary" @click="saveCustomer()">保存</el-button>
             </div>
+        </el-dialog><!--新增客户-->
+        <!--编辑客户-->
+        <el-dialog title="编辑客户信息" :visible="showEditCustomer" width="600px" :show-close="false">
+            <el-form :model="customerInfo">
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                    <el-input size="small" v-model="customerInfo.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="手机" :label-width="formLabelWidth">
+                    <el-input size="small" v-model="customerInfo.phone" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" :label-width="formLabelWidth">
+                    <div>
+                        <div class="open-list-area-select">
+                            <el-select size="small" v-model="customerInfo.province" placeholder="请选择" @change="provinceChange">
+                                <el-option
+                                        v-for="(item,index) in province"
+                                        :key="index"
+                                        :label="item"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="open-list-area-select">
+                            <el-select size="small" v-model="customerInfo.city" placeholder="请选择" @change="cityChange">
+                                <el-option
+                                        v-for="(item,index) in city"
+                                        :key="index"
+                                        :label="item"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="open-list-area-select">
+                            <el-select size="small" v-model="customerInfo.county" placeholder="请选择">
+                                <el-option
+                                        v-for="item in county"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="mt2">
+                        <el-input size="small" v-model="customerInfo.address" autocomplete="off"></el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="品牌" :label-width="formLabelWidth">
+                    <el-select size="small" v-model="customerInfo.brand_ids" placeholder="请选择">
+                        <el-option v-for="(item,index) in brandList"
+                                   :value="item.poster_id"
+                                   :key="index"
+                                   :label="item.poster_name">{{item.poster_name}}
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="微信" :label-width="formLabelWidth">
+                    <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="类型" :label-width="formLabelWidth">
+                    <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
+                        <el-option value="" label="">全部</el-option>
+                        <el-option value="代理" label="代理">代理</el-option>
+                        <el-option value="S" label="S">S</el-option>
+                        <el-option value="A" label="A">A</el-option>
+                        <el-option value="B" label="B">B</el-option>
+                        <el-option value="C" label="C">C</el-option>
+                    </el-select>
+                </el-form-item>
+                <div class="text-center h6 text-muted">提示：新增客户有30天保护期，不会被归入客户公海，30天后如未成交自动释放到客户公海！</div>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="()=>{showEditCustomer = false;customerInfo={}}">取消</el-button>
+                <el-button type="primary" @click="editCustomerInfo()">保存</el-button>
+            </div>
         </el-dialog>
         <!--写跟进-->
-        <el-dialog title="写跟进" :visible="showFollowRecord!==''">
+        <el-dialog title="写跟进" :visible="showFollowRecord!==''" :show-close="false">
             <el-row :gutter="20">
                 <el-col :span="12">
                     <el-select placeholder="请选择跟进方式" size="small" style="width:100%" v-model="followRecordInfo.follow_type">
@@ -280,6 +354,21 @@
                 <el-button type="primary" @click="addFollowRecord()">保存</el-button>
             </div>
         </el-dialog>
+        <!--转移--团队经理权限-->
+        <el-dialog title="转移" :visible="showChangeFollower!==''" width="600px" :show-close="false">
+            <el-select size="small" v-model="salesman" placeholder="请选择">
+                <el-option
+                        v-for="(item,index) in employeeList"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="showChangeFollower = ''">取消</el-button>
+                <el-button type="primary" @click="changeFollower()">确定</el-button>
+            </div>
+        </el-dialog>
         <!--添加订单-->
         <AddOrder :show="showAddOrder" :brandList="brandList"></AddOrder>
     </div>
@@ -291,10 +380,14 @@
 		followMyListFun,
 		addFollowRecordFun,
 		postListFun,
-		releaseCustomerFun
+		releaseCustomerFun,
+		editCustomerInfoFun,
+		changeFollowFun,
+		getAllUserByMchFun
 	} from '@/api/activity'
 	import ChinaAddress from '@/common/china_address_v4.json'
 	import AddOrder from '../component/AddOrder'
+	import {getStore} from '@/utils/store';
 
 	export default {
 		components: {AddOrder},
@@ -310,9 +403,12 @@
 				showExportCustomer: false,
 				showFollowRecord: '',
 				showAddOrder: false,
+				showEditCustomer: false,
+				showChangeFollower: '',
 				timeRange: '',
 				searchMyParams: {},
 				searchDoneParams: {},
+				salesman: '',
 				followRecordInfo: {
 					cdate: new Date()
 				},
@@ -341,13 +437,21 @@
 					layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
 				},
 				brandList: [],
-				multipleSelection: []
+				multipleSelection: [],
+				doneSelection: [],
+				employeeList: [],
+				userInfo: {}
 			}
 		},
 		mounted() {
 			this.getDoneCustomerList();
 			this.getMyCustomerList();
 			this.queryBrandList();
+			this.getAllUserByMch();
+			this.userInfo = getStore({
+				name: 'userinfo'
+			});
+			console.log(this.userInfo);
 		},
 		methods: {
 			queryBrandList() {
@@ -388,7 +492,6 @@
 			},
 			//写跟进
 			addFollowRecord() {
-				console.log(this.showFollowRecord);
 				let params = {
 					puid: this.showFollowRecord,
 					...this.followRecordInfo
@@ -407,8 +510,10 @@
 			},
 			//新增客户
 			saveCustomer() {
+				this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name;
 				addMyCustomerFun(this.customerInfo).then(res => {
 					if (res.data.success) {
+						this.customerInfo = {};
 						this.showExportCustomer = false;
 						this.getMyCustomerList();
 						this.getDoneCustomerList();
@@ -420,10 +525,28 @@
 					}
 				})
 			},
+			todoEdit(type) {
+				let list = type === 1 ? this.multipleSelection : this.doneSelection
+				this.showEditCustomer = true;
+				this.customerInfo = list[0];
+			},
+			//编辑客户信息
+			editCustomerInfo() {
+				this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name;
+				editCustomerInfoFun(this.customerInfo).then(res => {
+					if (res.data.success) {
+						this.showEditCustomer = false;
+						this.customerInfo = {};
+						this.getDoneCustomerList();
+						this.getMyCustomerList();
+					}
+				})
+			},
 			//转移到客户公海
-			releaseCustomer() {
+			releaseCustomer(type) {
 				let count = 0;
-				this.multipleSelection.forEach(item => {
+				let list = type === 1 ? this.multipleSelection : this.doneSelection;
+				list.forEach(item => {
 					let params = {
 						puid: item.puid
 					};
@@ -443,6 +566,45 @@
 					this.getMyCustomerList();
 				}, 1000)
 			},
+			//所有员工
+			getAllUserByMch() {
+				let params = {
+					is_payroll: 1,
+					group_id: this.userInfo.group_id
+				};
+				getAllUserByMchFun(params).then(res => {
+					if (res.data.success) {
+						this.employeeList = res.data.data;
+					}
+				})
+			},
+			changeFollower() {
+				let count = 0;
+				let list = this.showChangeFollower === 1 ? this.multipleSelection : this.doneSelection;
+				let salesman_name = this.employeeList.filter(item => item.id == this.salesman)[0].name;
+				list.forEach(item => {
+					let params = {
+						salesman_name,
+						salesman_id: this.salesman,
+						id: item.id
+					};
+					changeFollowFun(params).then(res => {
+						if (res.data.success) {
+							count++;
+						}
+					});
+				});
+				setTimeout(() => {
+					this.$message({
+						showClose: true,
+						message: `操作完成！成功${count}条，失败${this.multipleSelection.length - count}条!`,
+						type: 'success'
+					});
+					this.getDoneCustomerList();
+					this.getMyCustomerList();
+					this.showChangeFollower = '';
+				}, 1000)
+			},
 			provinceChange(value) {
 				this.city = Object.keys(ChinaAddress[value]);
 			},
@@ -451,6 +613,9 @@
 			},
 			handleSelectionChange(val) {
 				this.multipleSelection = val;
+			},
+			doneSelectionChange(val) {
+				this.doneSelection = val;
 			},
 			// 上下分页
 			handleCurrentChange(page) {
