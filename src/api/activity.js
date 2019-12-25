@@ -1256,3 +1256,14 @@ export function changeFollowFun(data) {
 		data
 	})
 }
+
+/**
+ * 把客户转给别的业务员
+ * */
+export function addOrderFun(data) {
+	return request({
+		url: urlCol.follow.sheet.addorder.url,
+		method: 'post',
+		data
+	})
+}
