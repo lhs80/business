@@ -1,6 +1,6 @@
 <template>
     <!--添加订单-->
-    <el-dialog title="添加订单" :visible="show" top="5vh" :show-close="false">
+    <el-dialog title="添加订单" :visible="show" top="5vh" :show-close="false" width="600px">
         <el-row :gutter="10">
             <el-col :span="12">
                 <div>
@@ -24,14 +24,40 @@
                     </div>
                 </div>
                 <div class="mt4">
-                    <el-row v-for="(item,index) in prodInfo.normMap" class="mt2" :key="index">
-                        <el-col :span="8">
-                            <el-tag>{{item.norm_name}}</el-tag>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-input-number v-model="item.orderNum" label="描述文字" size="small"></el-input-number>
-                        </el-col>
-                    </el-row>
+                    <div v-if="prodInfo && prodInfo.normMap">
+                        <div v-for="(item,index) in prodInfo.normMap" :key="index" class="norms-wrapper">
+                            <el-row class="mt2" v-if="index===0&&prodInfo.normMap.length>1">
+                                <el-col :span="8">
+                                    <label class="text-muted">{{item.norm_name}}:</label>
+                                </el-col>
+                                <el-col :span="12">
+                                    <span class="norm-item" :class="subItem.item_id===mainNormItem.item_id?'active':''"
+                                          v-for="(subItem,subIndex) in item.items"
+                                          :key="subIndex"
+                                          @click="mainNormItem=subItem"
+                                    > {{subItem.item_name}}</span>
+                                </el-col>
+                            </el-row>
+                            <el-row class="mt2" v-else>
+                                <el-col :span="8">
+                                    <label class="text-muted">{{item.norm_name}}:</label>
+                                </el-col>
+                                <el-col :span="16">
+                                    <el-row v-for="(subItem,subIndex) in item.items" :key="subIndex">
+                                        <el-col :span="12"><b>{{subItem.item_name}}</b></el-col>
+                                        <el-col :span="12">
+                                            <el-input-number :value="getNormItemValue(subItem)" label="描述文字"
+                                                             size="small"
+                                                             @change="(value)=>handleNorm(subItem,value,subIndex)"></el-input-number>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <el-input-number label="描述文字" size="small"></el-input-number>
+                    </div>
                 </div>
                 <div class="text-center mt4">
                     <el-button type="primary" size="large" @click="addToCart">添加到进货单</el-button>
@@ -85,21 +111,27 @@
 		props: ['show', 'brandList'],
 		data() {
 			return {
-				brandId: '',
-				prodId: '',
-				norms: [{
-					name: '黄色',
-					orderNum: 0
-				}, {
-					name: '绿色',
-					orderNum: 0
-				}, {
-					name: '红色',
-					orderNum: 0
-				}],
-				cartList: [],
-				prodList: [],
-				prodInfo: {}
+				count: [],//
+				brandId: '',//选中的品牌Id
+				prodId: '',//选中的商品品Id
+				norms_arr: [],
+				cartList: [],//进货单
+				prodList: [],//根据品牌查出的商品列表
+				prodInfo: {},//选中的商品信息
+				mainNormItem: {},//一级规格值
+			}
+		},
+		computed: {
+			getNormItemValue: function (normItem) {
+				this.norms_arr.forEach(item => {
+					const {norm_item_arr} = item;
+					console.log(norm_item_arr);
+					return 0;
+									norm_item_arr.every(item)
+					// if (norm_item_arr.every([this.mainNormItem, normItem])) {
+					// 	return norm_item_arr.count || 0
+					// }
+				})
 			}
 		},
 		methods: {
@@ -122,8 +154,22 @@
 				queryGoodsDetailFun(params).then(res => {
 					if (res.data.success) {
 						this.prodInfo = res.data.data;
+						const {items} = this.prodInfo.normMap[0];
+						this.mainNormItem = items[0];
+						this.norms_arr = this.prodInfo.skus;
 					}
 				})
+			},
+			handleNorm(subItem, count, index) {
+				if (this.norms_arr[index]) {
+					this.norms_arr[index].count = count;
+				} else {
+					this.norms_arr.push({
+						norms: [this.mainNormItem, subItem],
+						count
+					})
+				}
+				console.log(this.norms_arr)
 			},
 			//添加到进货单
 			addToCart() {
@@ -146,6 +192,19 @@
 	}
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    .norms-wrapper {
+        .norm-item {
+            border: solid 1px #f0f0f0;
+            padding: 3px 8px;
+            cursor: pointer;
+            & + .norm-item {
+                margin-left: 5px;
+            }
+            &.active {
+                border: solid 1px red;
+                color: red;
+            }
+        }
+    }
 </style>
