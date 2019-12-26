@@ -120,7 +120,7 @@
             <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="releaseCustomer(2)">
               转移至客户公海
             </el-button>
-            <el-button type="primary" size="small" @click="showAddOrder=true">添加订单</el-button>
+            <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="showAddOrder=true">添加订单</el-button>
             <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="showChangeFollower=2">
               转移
             </el-button>
@@ -379,7 +379,7 @@
       </div>
     </el-dialog>
     <!--添加订单-->
-    <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList" :puid="doneSelection"></AddOrder>
+    <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList" :puid="doneSelection[0]"></AddOrder>
   </div>
 </template>
 <script>
