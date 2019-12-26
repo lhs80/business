@@ -379,7 +379,7 @@
       </div>
     </el-dialog>
     <!--添加订单-->
-    <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList"></AddOrder>
+    <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList" :puid="doneSelection"></AddOrder>
   </div>
 </template>
 <script>

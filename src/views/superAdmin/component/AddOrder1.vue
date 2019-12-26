@@ -28,34 +28,29 @@
                     </div>
                 </div>
                 <div class="mt4">
-                    <div v-if="prodInfo.normMap">
-                        <div v-for="(item,index) in prodInfo.normMap" :key="index" class="norms-wrapper">
-                            <el-row class="mt2" v-if="index===0&&prodInfo.normMap.length>1">
-                                <el-col :span="6">
+                    <div v-if="norms_arr.length">
+                        <div v-for="(item,index) in norms_arr" :key="index" class="norms-wrapper">
+                            <!--              v-if="index===0&&norms_arr.length>1"-->
+                            <el-row class="mt2">
+                                <el-col :span="8">
                                     <label class="text-muted">{{item.norm_name}}:</label>
                                 </el-col>
-                                <el-col :span="18">
-                                    <span class="norm-item" :class="subItem.item_id===firstNorm.item_id?'active':''"
-                                          v-for="(subItem,subIndex) in item.items"
-                                          :key="subIndex"
-                                          @click="changeFirstNorm(subItem)"
-                                    >
-                                        {{subItem.item_name}}
-                                    </span>
+                                <el-col :span="12">
+                                    <span class="norm-item"> {{item.sub_name}}</span>
                                 </el-col>
                             </el-row>
-                            <el-row class="mt2" v-if="index!==0||prodInfo.normMap.length<=1">
+                            <el-row class="mt2" v-for="(subItem,subIndex) in item.children" :key="subIndex">
                                 <el-col :span="6">
-                                    <label class="text-muted">{{item.norm_name}}:</label>
+                                    <label class="text-muted">{{subItem.norm_name}}:</label>
                                 </el-col>
                                 <el-col :span="18">
-                                    <el-row :class="subIndex>0?'mt2':''" v-for="(subItem,subIndex) in item.items" :key="subIndex">
-                                        <el-col :span="4">{{subItem.item_name}}</el-col>
-                                        <el-col :span="12" :offset="8">
-                                            <el-input-number :value="queryCount(subItem)" label="描述文字"
+                                    <el-row :class="subNormIndex>0?'mt2':''" v-for="(subNormItem,subNormIndex) in subItem.item"
+                                            :key="subNormIndex">
+                                        <el-col :span="4"><b>{{subNormItem.sub_name}}</b></el-col>
+                                        <el-col :span="10" :offset="10">
+                                            <el-input-number :value="subNormItem.count" label="描述文字"
                                                              size="small"
-                                                             :disabled="!firstNorm.item_id"
-                                                             @change="(value)=>handleNorm(value,subItem)"></el-input-number>
+                                                             @change="(value)=>handleNorm(value,subNormItem.sku_id,index,subIndex,subNormIndex)"></el-input-number>
                                         </el-col>
                                     </el-row>
                                 </el-col>
@@ -83,8 +78,8 @@
                             <template slot-scope="scope">
                                 <el-row>
                                     <el-col :span="12">
-                                        <span v-if="scope.row.norm_item_arr" v-for="(subItem,subIndex) in scope.row.norm_item_arr"
-                                              :key="subIndex">{{subItem.sub_name}} </span>
+                                        <span v-if="scrop.row.norm_item_arr" v-for="(subItem,subIndex) in scope.row.norm_item_arr"
+                                              :key="subIndex">{{subItem.sub_name}}</span>
                                     </el-col>
                                     <el-col :span="12">x{{ scope.row.count}}</el-col>
                                 </el-row>
@@ -103,7 +98,7 @@
                     </div>
                 </div>
                 <div class="mt2">
-                    <label class="h6">订单总价：<span class="h5 text-danger"><small>￥</small>{{Number(orderInfo.total)+Number(orderInfo.express_cost)}}</span> 元</label>
+                    <label class="h6">订单总价：{{Number(orderInfo.total)+Number(orderInfo.express_cost)}}元</label>
                 </div>
                 <div class="mt2">
                     <div>
@@ -179,7 +174,7 @@
         resultProduct: [],
         prodList: [],//根据品牌查出的商品列表
         prodInfo: {},//选中的商品信息
-        firstNorm: {},//一级规格值
+        mainNormItem: {},//一级规格值
         orderInfo: {
           total: 0,
           express_cost: 0,
@@ -188,15 +183,6 @@
           county: '',
           address: '',
           remark: ''
-        }
-      }
-    },
-    computed: {
-      queryCount () {
-        return function (item) {
-          let index = this.cartList.findIndex(list => list.norm_item_arr[0].subId === this.firstNorm.item_id && list.norm_item_arr[1].subId === item.item_id)
-          console.log(index)
-          return index >= 0 ? this.cartList[index].count : 0
         }
       }
     },
@@ -223,18 +209,46 @@
         }
         queryGoodsDetailFun(params).then(res => {
             if (res.data.success) {
+              let index = -1
               this.prodInfo = res.data.data
               if (this.prodInfo.normMap) {
-                this.cartList = []
-                this.prodInfo.skus.forEach(item => {
-                  const {sku_id, norm_item_arr, price} = item
-                  this.cartList.push({
-                    sku_id,
-                    norm_item_arr,
-                    count: 0,
-                    price
-                  })
+                res.data.data.skus.forEach(skuItem => {
+                  index = this.norms_arr.findIndex(item => item.subId === skuItem.norm_item_arr[0].subId)
+                  if (index >= 0) {
+                    let subIndex = this.norms_arr[index].children.findIndex(item => item.norm_id === skuItem.norm_item_arr[1].norm_id)
+                    if (subIndex >= 0) {
+                      this.norms_arr[index].children[subIndex].item.push({
+                        ...skuItem.norm_item_arr[1],
+                        sku_id: skuItem.sku_id,
+                        count: 0,
+                      })
+                    } else {
+                      this.norms_arr[index].children.push({
+                        name: skuItem.norm_item_arr[1].norm_name,
+                        subId: skuItem.norm_item_arr[1].subId,
+                        item: [{
+                          ...skuItem.norm_item_arr[1],
+                          sku_id: skuItem.sku_id,
+                          count: 0,
+                        }]
+                      })
+                    }
+                  } else {
+                    this.norms_arr.push({
+                      ...skuItem.norm_item_arr[0],
+                      children: [{
+                        norm_name: skuItem.norm_item_arr[1].norm_name,
+                        norm_id: skuItem.norm_item_arr[1].norm_id,
+                        item: [{
+                          ...skuItem.norm_item_arr[1],
+                          sku_id: skuItem.sku_id,
+                          count: 0,
+                        }]
+                      }],
+                    })
+                  }
                 })
+                console.log(this.norms_arr)
               } else {
                 this.cartList[0].sku_id = this.prodInfo.skus[0].sku_id
                 this.cartList[0].count = 0
@@ -244,14 +258,17 @@
           }
         )
       },
-      //改变一级规格
-      changeFirstNorm (item) {
-        this.firstNorm = item
-      },
-      handleNorm (count, item) {
-        let index = this.cartList.findIndex(list => list.norm_item_arr[0].subId === this.firstNorm.item_id && list.norm_item_arr[1].subId === item.item_id)
-        this.cartList[index].count = count
-        console.log(this.cartList)
+      handleNorm (count, skuId, index, childIndex, subIndex) {
+        this.norms_arr[index].children[childIndex].item[subIndex].count = count
+        let itemIndex = this.cartList.findIndex(item => item.sku_id === skuId)
+        if (itemIndex >= 0) {
+          this.cartList[itemIndex].count = count
+        } else {
+          this.cartList.push({
+            sku_id: skuId,
+            count
+          })
+        }
       },
       noNormCountChange (value) {
         this.cartList[0].count = value
@@ -260,18 +277,15 @@
       addToCart () {
         this.resultProduct = []
         this.cartList.forEach(item => {
-          if (item.count > 0) {
-            this.orderInfo.total += item.price * item.count
-            const {sku_id, count,norm_item_arr} = item
-            this.resultProduct.push({
-              brandName: this.brandList.filter(brand => brand.poster_id === this.brandId)[0].poster_name,
-              productName: this.prodInfo.goods_name,
-              sku_id,
-              count,
-              norm_item_arr
-            })
-            console.log(this.resultProduct)
-          }
+          let product = this.prodInfo.skus.filter(prod => prod.sku_id === item.sku_id)
+          this.orderInfo.total += product[0].price * item.count
+          this.resultProduct.push({
+            brandName: this.brandList.filter(brand => brand.poster_id === this.brandId)[0].poster_name,
+            productName: this.prodInfo.goods_name,
+            ...product[0],
+            count: item.count,
+          })
+          console.log(this.resultProduct)
         })
       },
       saveOrder () {
