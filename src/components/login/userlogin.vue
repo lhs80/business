@@ -110,6 +110,7 @@
           _this.$refs.loginForm.validate(valid => {
             if (valid) {
               login(_this.loginForm).then(response => {
+                console.log("login",response)
                 if (response.data.success) {
                   if (response.data.data.roleId === '6') {
                     _this.$store.commit("SET_LOGINTYPE", "sh-send");

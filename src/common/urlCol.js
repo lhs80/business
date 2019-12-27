@@ -247,7 +247,8 @@ const urlCol = {
   order: {
     //所有订单
     orderList: {
-      url: '/mch/order/getOrders'
+      // url: '/mch/order/getOrders'
+      url: '/mch/salesman/getSalesmanCustomerOrders'
     },
     //订单详情
     orderDetail: {
@@ -479,7 +480,7 @@ const urlCol = {
         url: '/mch/salesman/transformToOtherSalesMan'
       },
       addorder: {
-        url: "/mch/salesman/addManuaOrder"
+        url: '/mch/salesman/addManuaOrder'
       }
     },
   },
@@ -598,10 +599,9 @@ const urlCol = {
       }
     }
   }
-};
+}
 
-
-export default urlCol;
+export default urlCol
 /* {
 	activity: urlCol.activity,
 	activityType: urlCol.activityType,
