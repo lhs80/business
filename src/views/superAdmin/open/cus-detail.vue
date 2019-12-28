@@ -86,19 +86,18 @@
                     <el-row>
                         <el-col :span="8" class="text-center">
                             <h5>销售额</h5>
-                            <h5>￥{{trandInfo.amount}}</h5>
+                            <h5>￥{{customInfo.spend_money}}</h5>
                         </el-col>
                         <el-col :span="8" class="text-center">
                             <h5>平均单价</h5>
-                            <h5>￥{{trandInfo.avg}}</h5>
+                            <h5>￥{{customInfo.averageMoney}}</h5>
                         </el-col>
                         <el-col :span="8" class="text-center">
                             <h5>累计订单</h5>
-                            <h5>{{trandInfo.avg}}</h5>
+                            <h5>{{customInfo.spend_count}}</h5>
                         </el-col>
                     </el-row>
                 </el-card>
-
                 <el-card style="width:60%;margin:0 auto" class="mt4" shadow="never">
                     <div slot="header" class="text-center">
                         <span>店铺累计交易</span>
@@ -106,15 +105,15 @@
                     <el-row>
                         <el-col :span="8" class="text-center">
                             <h5>销售额</h5>
-                            <h5>￥{{trandInfo.amount}}</h5>
+                            <h5>￥{{customInfo.mch_spend_money}}</h5>
                         </el-col>
                         <el-col :span="8" class="text-center">
                             <h5>平均单价</h5>
-                            <h5>￥{{trandInfo.avg}}</h5>
+                            <h5>￥{{customInfo.mch_averageMoney}}</h5>
                         </el-col>
                         <el-col :span="8" class="text-center">
                             <h5>累计订单</h5>
-                            <h5>{{trandInfo.avg}}</h5>
+                            <h5>{{customInfo.mch_spend_count}}</h5>
                         </el-col>
                     </el-row>
                 </el-card>
@@ -308,15 +307,8 @@
         }
         queryCustomerTrandFun(params).then(res => {
           if (res.data.success) {
-            let amount = 0
-            res.data.data.data.forEach(item => {
-              amount += item.pay_total
-            })
-            this.trandInfo = {
-              num: res.data.data.data.length,
-              amount,
-              avg: Math.ceil(amount / res.data.data.data.length)
-            }
+            this.trandInfo = res.data.data;
+            console.log(this.trandInfo)
           }
         })
       },
