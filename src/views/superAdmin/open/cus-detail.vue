@@ -31,7 +31,9 @@
                                 </el-col>
                             </el-row>
                             <div class="text-grey">{{item.content}}</div>
-                            <div class="h6 text-muted">下次跟进时间：{{$moment(item.next_follow_date*1000).format('YYYY-MM-DD HH:mm')}}</div>
+                            <div class="h6 text-muted">下次跟进时间：
+                                {{item.next_follow_date?$moment(item.next_follow_date*1000).format('YYYY-MM-DD HH:mm'):'无'}}
+                            </div>
                         </div>
                     </li>
                 </ul>
@@ -206,7 +208,7 @@
             </div>
         </el-dialog>
         <!--添加订单-->
-        <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList" :puid="customInfo.puid"></AddOrder>
+        <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList" :puid="customInfo.puid" ></AddOrder>
     </section>
 </template>
 
@@ -307,7 +309,7 @@
         }
         queryCustomerTrandFun(params).then(res => {
           if (res.data.success) {
-            this.trandInfo = res.data.data;
+            this.trandInfo = res.data.data
             console.log(this.trandInfo)
           }
         })
