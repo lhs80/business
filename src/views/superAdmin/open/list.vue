@@ -52,7 +52,7 @@
           <el-table-column type="selection"></el-table-column>
           <el-table-column prop="name" label="客户姓名">
             <template slot-scope="scope">
-              <router-link :to="{path: '/superAdmin/followList/detail',query:{id:scope.row.id}}">
+              <router-link :to="{path: '/superAdmin/followList/detail',query:{id:scope.row.id,type:2}}">
                 <b class="text-info">{{scope.row.name}}</b>
               </router-link>
             </template>
@@ -250,7 +250,7 @@
           <el-input size="small" v-model="customerInfo.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" :label-width="formLabelWidth">
-          <el-input size="small" v-model="customerInfo.phone" autocomplete="off"></el-input>
+          <el-input size="small" v-model="customerInfo.phone" autocomplete="off" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth">
           <div>

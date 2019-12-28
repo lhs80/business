@@ -11,7 +11,7 @@
             </el-col>
         </el-row>
         <el-tabs v-model="activeName">
-            <el-tab-pane label="跟进动态" name="first">
+            <el-tab-pane v-if="type===2" label="跟进动态" name="first">
                 <div class="text-right prl2">
                     <el-button size="small" type="primary" @click="showFollowRecord=true">写跟进</el-button>
                 </div>
@@ -39,7 +39,7 @@
                     暂无数据
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="基本资料" name="second">
+            <el-tab-pane v-if="type===2" label="基本资料" name="second">
                 <ul>
                     <li>姓名：{{customInfo.name}}</li>
                     <li>电话：{{customInfo.phone}}</li>
@@ -50,7 +50,7 @@
                     <li>创建时间：{{$moment(customInfo.cdate*1000).format('YYYY-MM-DD')}}</li>
                 </ul>
             </el-tab-pane>
-            <el-tab-pane label="客户订单" name="third">
+            <el-tab-pane v-if="type===2" label="客户订单" name="third">
                 <el-table :data="orderList" stripe style="width: 100%">
                     <el-table-column label="商品名称">
                         <template slot-scope="scope">
@@ -78,7 +78,7 @@
                     <el-table-column prop="salessman_name" label="业务所属"></el-table-column>
                 </el-table>
             </el-tab-pane>
-            <el-tab-pane label="客户交易" name="fourth">
+            <el-tab-pane v-if="type===2" label="客户交易" name="fourth">
                 <el-card style="width:60%;margin:0 auto" class="mt2" shadow="never">
                     <div slot="header" class="text-center">
                         <span>我的业绩</span>
@@ -229,6 +229,7 @@
     components: {AddOrder},
     data () {
       return {
+        type: this.$route.query.type,//从哪个页面进入的 type=1:客户公海 type=2:客户跟进
         brandList: [],
         showAddOrder: false,
         showFollowRecord: false,
