@@ -33,8 +33,9 @@
                         <el-button type="primary" size="small" :disabled="!multipleSelection.length>0" @click="todoEdit(1)">编辑
                         </el-button>
                         <el-button type="primary" size="small" :disabled="!multipleSelection.length>0" @click="releaseCustomer(1)">
-                            转移至客户公海
+                            释放回客户公海
                         </el-button>
+                        <el-button type="primary" size="small" :disabled="!multipleSelection.length>0" @click="openAddOrder(1)">添加订单</el-button>
                         <el-button type="primary" size="small" :disabled="!multipleSelection.length>0"
                                    @click="showChangeFollower=1">转移
                         </el-button>
@@ -112,9 +113,9 @@
                         <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="todoEdit(2)">编辑
                         </el-button>
                         <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="releaseCustomer(2)">
-                            转移至客户公海
+                            释放回客户公海
                         </el-button>
-                        <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="showAddOrder=true">添加订单</el-button>
+                        <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="openAddOrder(2)">添加订单</el-button>
                         <el-button type="primary" size="small" :disabled="!doneSelection.length>0" @click="showChangeFollower=2">
                             转移
                         </el-button>
@@ -143,7 +144,7 @@
                     <el-table-column prop="type" label="客户类型"></el-table-column>
                     <el-table-column prop="spend_count" label="业绩订单"></el-table-column>
                     <el-table-column prop="spend_money" label="订单均价"></el-table-column>
-                    <el-table-column prop="last_buy_date" label="距上次下单时间"></el-table-column>
+                    <el-table-column prop="last_order_timespan_str" label="距上次下单时间"></el-table-column>
                     <el-table-column label="跟进记录">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="showFollowRecord=scope.row.puid">写跟进</el-button>
@@ -405,269 +406,276 @@
             </div>
         </el-dialog>
         <!--添加订单-->
-        <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList" :puid="doneSelection[0]"></AddOrder>
+        <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList"
+                  :puid="curPuid"></AddOrder>
     </div>
 </template>
 <script>
-  import {
-    addMyCustomerFun,
-    followDoneListFun,
-    followMyListFun,
-    addFollowRecordFun,
-    postListFun,
-    releaseCustomerFun,
-    editCustomerInfoFun,
-    changeFollowFun,
-    getAllUserByMchFun
-  } from '@/api/activity'
-  import ChinaAddress from '@/common/china_address_v4.json'
-  import AddOrder from '../component/AddOrder'
-  import {getStore} from '@/utils/store'
+	import {
+		addMyCustomerFun,
+		followDoneListFun,
+		followMyListFun,
+		addFollowRecordFun,
+		postListFun,
+		releaseCustomerFun,
+		editCustomerInfoFun,
+		changeFollowFun,
+		getAllUserByMchFun
+	} from '@/api/activity'
+	import ChinaAddress from '@/common/china_address_v4.json'
+	import AddOrder from '../component/AddOrder'
+	import {getStore} from '@/utils/store'
 
-  export default {
-    components: {AddOrder},
-    data () {
-      return {
-        province: Object.keys(ChinaAddress),
-        city: [],
-        county: [],
-        brandName: '',//品牌信息
-        followRecordTime: '',
-        activeName: 'first',
-        formLabelWidth: '50px',
-        showExportCustomer: false,
-        showFollowRecord: '',
-        showAddOrder: false,
-        showEditCustomer: false,
-        showChangeFollower: '',
-        timeRange: '',
-        searchMyParams: {},
-        searchDoneParams: {},
-        salesman: '',
-        followRecordInfo: {
-          cdate: new Date()
-        },
-        customerInfo: {
-          name: '',
-          tel: '',
-          address: '',
-          wxChat: ''
-        },
-        doneCusList: [],
-        myCusList: [],
-        myPaginations: {
-          page_index: 1, // 当前位于哪页
-          total: 0, // 总条数`
-          page_count: 0,//总页数
-          page_size: 5, // 1页显示多少条
-          pageSizes: [5, 10, 15, 20], //每页显示多少条
-          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
-        },
-        donePaginations: {
-          page_index: 1, // 当前位于哪页
-          total: 0, // 总条数`
-          page_count: 0,//总页数
-          page_size: 5, // 1页显示多少条
-          pageSizes: [5, 10, 15, 20], //每页显示多少条
-          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
-        },
-        brandList: [],
-        multipleSelection: [],
-        doneSelection: [],
-        employeeList: [],
-        userInfo: {}
-      }
-    },
-    mounted () {
-      this.getDoneCustomerList()
-      this.getMyCustomerList()
-      this.queryBrandList()
-      this.getAllUserByMch()
-      this.userInfo = getStore({
-        name: 'userinfo'
-      })
-      console.log(this.userInfo)
-    },
-    methods: {
-      queryBrandList () {
-        let params = {
-          pageSize: 1000,
-          pageIndex: 1
-        }
-        postListFun(params).then(res => {
-          if (res.data.success) {
-            this.brandList = res.data.data.data
-          }
-        })
-      },
-      //我的成交客户
-      getDoneCustomerList () {
-        let params = {
-          ...this.searchDoneParams,
-          pageSize: this.myPaginations.page_size,
-          pageIndex: this.myPaginations.page_index
-        }
-        followDoneListFun(params).then(res => {
-          if (res.data.success) {
-            this.doneCusList = res.data.data.data
-          }
-        })
-      },
-      //我的跟进客户
-      getMyCustomerList () {
-        let params = {
-          ...this.searchMyParams,
-          pageSize: this.myPaginations.page_size,
-          pageIndex: this.myPaginations.page_index
-        }
-        followMyListFun(params).then(res => {
-          if (res.data.success) {
-            this.myCusList = res.data.data.data
-          }
-        })
-      },
-      //写跟进
-      addFollowRecord () {
-        let params = {
-          puid: this.showFollowRecord,
-          ...this.followRecordInfo
-        }
-        addFollowRecordFun(params).then(res => {
-          if (res.data.success) {
-            this.showFollowRecord = ''
-            this.$message({
-              showClose: true,
-              message: '添加成功',
-              type: 'success',
-              center: true
-            })
-          }
-        })
-      },
-      //新增客户
-      saveCustomer () {
-        this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name
-        addMyCustomerFun(this.customerInfo).then(res => {
-          if (res.data.success) {
-            this.customerInfo = {}
-            this.showExportCustomer = false
-            this.getMyCustomerList()
-            this.getDoneCustomerList()
-            this.$message({
-              showClose: true,
-              message: '添加成功！',
-              type: 'success'
-            })
-          }
-        })
-      },
-      todoEdit (type) {
-        let list = type === 1 ? this.multipleSelection : this.doneSelection
-        this.showEditCustomer = true
-        this.customerInfo = list[0]
-      },
-      //编辑客户信息
-      editCustomerInfo () {
-        this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name
-        editCustomerInfoFun(this.customerInfo).then(res => {
-          if (res.data.success) {
-            this.showEditCustomer = false
-            this.customerInfo = {}
-            this.getDoneCustomerList()
-            this.getMyCustomerList()
-          }
-        })
-      },
-      //转移到客户公海
-      releaseCustomer (type) {
-        let count = 0
-        let list = type === 1 ? this.multipleSelection : this.doneSelection
-        list.forEach(item => {
-          let params = {
-            puid: item.puid
-          }
-          releaseCustomerFun(params).then(res => {
-            if (res.data.success) {
-              count++
-            }
-          })
-        })
-        setTimeout(() => {
-          this.$message({
-            showClose: true,
-            message: `操作完成！成功${count}条，失败${this.multipleSelection.length - count}条!`,
-            type: 'success'
-          })
-          this.getDoneCustomerList()
-          this.getMyCustomerList()
-        }, 1000)
-      },
-      //所有员工
-      getAllUserByMch () {
-        let params = {
-          is_payroll: 1,
-          group_id: this.userInfo.group_id
-        }
-        getAllUserByMchFun(params).then(res => {
-          if (res.data.success) {
-            this.employeeList = res.data.data
-          }
-        })
-      },
-      changeFollower () {
-        let count = 0
-        let list = this.showChangeFollower === 1 ? this.multipleSelection : this.doneSelection
-        let salesman_name = this.employeeList.filter(item => item.id == this.salesman)[0].name
-        list.forEach(item => {
-          let params = {
-            salesman_name,
-            salesman_id: this.salesman,
-            id: item.id
-          }
-          changeFollowFun(params).then(res => {
-            if (res.data.success) {
-              count++
-            }
-          })
-        })
-        setTimeout(() => {
-          this.$message({
-            showClose: true,
-            message: `操作完成！成功${count}条，失败${this.multipleSelection.length - count}条!`,
-            type: 'success'
-          })
-          this.getDoneCustomerList()
-          this.getMyCustomerList()
-          this.showChangeFollower = ''
-        }, 1000)
-      },
-      provinceChange (value) {
-        this.city = Object.keys(ChinaAddress[value])
-      },
-      cityChange () {
-        this.county = ChinaAddress[this.customerInfo.province][this.customerInfo.city]
-      },
-      handleSelectionChange (val) {
-        this.multipleSelection = val
-      },
-      doneSelectionChange (val) {
-        this.doneSelection = val
-      },
-      // 上下分页
-      handleCurrentChange (page) {
-        this.paginations.page_index = page
-        this.getOrderList()
-      },
-      // 每页多少条切换
-      handleSizeChange (page_size) {
-        this.paginations.page_size = page_size
-        this.getOrderList()
-      },
-      closeAddOrder () {
-        this.showAddOrder = false
-      }
-    }
-  }
+	export default {
+		components: {AddOrder},
+		data() {
+			return {
+				curPuid: '',
+				province: Object.keys(ChinaAddress),
+				city: [],
+				county: [],
+				brandName: '',//品牌信息
+				followRecordTime: '',
+				activeName: 'first',
+				formLabelWidth: '50px',
+				showExportCustomer: false,
+				showFollowRecord: '',
+				showAddOrder: false,
+				showEditCustomer: false,
+				showChangeFollower: '',
+				timeRange: '',
+				searchMyParams: {},
+				searchDoneParams: {},
+				salesman: '',
+				followRecordInfo: {
+					cdate: new Date()
+				},
+				customerInfo: {
+					name: '',
+					tel: '',
+					address: '',
+					wxChat: ''
+				},
+				doneCusList: [],
+				myCusList: [],
+				myPaginations: {
+					page_index: 1, // 当前位于哪页
+					total: 0, // 总条数`
+					page_count: 0,//总页数
+					page_size: 5, // 1页显示多少条
+					pageSizes: [5, 10, 15, 20], //每页显示多少条
+					layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
+				},
+				donePaginations: {
+					page_index: 1, // 当前位于哪页
+					total: 0, // 总条数`
+					page_count: 0,//总页数
+					page_size: 5, // 1页显示多少条
+					pageSizes: [5, 10, 15, 20], //每页显示多少条
+					layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
+				},
+				brandList: [],
+				multipleSelection: [],
+				doneSelection: [],
+				employeeList: [],
+				userInfo: {}
+			}
+		},
+		mounted() {
+			this.getDoneCustomerList()
+			this.getMyCustomerList()
+			this.queryBrandList()
+			this.getAllUserByMch()
+			this.userInfo = getStore({
+				name: 'userinfo'
+			})
+			console.log(this.userInfo)
+		},
+		methods: {
+			openAddOrder(type) {
+				this.showAddOrder = true;
+				this.curPuid = type === 1 ? this.myCusList[0].puid : this.doneSelection[0].puid
+			},
+			queryBrandList() {
+				let params = {
+					pageSize: 1000,
+					pageIndex: 1
+				}
+				postListFun(params).then(res => {
+					if (res.data.success) {
+						this.brandList = res.data.data.data
+					}
+				})
+			},
+			//我的成交客户
+			getDoneCustomerList() {
+				let params = {
+					...this.searchDoneParams,
+					pageSize: this.myPaginations.page_size,
+					pageIndex: this.myPaginations.page_index
+				}
+				followDoneListFun(params).then(res => {
+					if (res.data.success) {
+						this.doneCusList = res.data.data.data
+					}
+				})
+			},
+			//我的跟进客户
+			getMyCustomerList() {
+				let params = {
+					...this.searchMyParams,
+					pageSize: this.myPaginations.page_size,
+					pageIndex: this.myPaginations.page_index
+				}
+				followMyListFun(params).then(res => {
+					if (res.data.success) {
+						this.myCusList = res.data.data.data
+					}
+				})
+			},
+			//写跟进
+			addFollowRecord() {
+				let params = {
+					puid: this.showFollowRecord,
+					...this.followRecordInfo
+				};
+				addFollowRecordFun(params).then(res => {
+					if (res.data.success) {
+						this.showFollowRecord = '';
+						this.followRecordInfo = {};
+						this.$message({
+							showClose: true,
+							message: '添加成功',
+							type: 'success',
+							center: true
+						})
+					}
+				})
+			},
+			//新增客户
+			saveCustomer() {
+				this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name
+				addMyCustomerFun(this.customerInfo).then(res => {
+					if (res.data.success) {
+						this.customerInfo = {}
+						this.showExportCustomer = false
+						this.getMyCustomerList()
+						this.getDoneCustomerList()
+						this.$message({
+							showClose: true,
+							message: '添加成功！',
+							type: 'success'
+						})
+					}
+				})
+			},
+			todoEdit(type) {
+				let list = type === 1 ? this.multipleSelection : this.doneSelection
+				this.showEditCustomer = true
+				this.customerInfo = list[0]
+			},
+			//编辑客户信息
+			editCustomerInfo() {
+				this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name
+				editCustomerInfoFun(this.customerInfo).then(res => {
+					if (res.data.success) {
+						this.showEditCustomer = false
+						this.customerInfo = {}
+						this.getDoneCustomerList()
+						this.getMyCustomerList()
+					}
+				})
+			},
+			//转移到客户公海
+			releaseCustomer(type) {
+				let count = 0
+				let list = type === 1 ? this.multipleSelection : this.doneSelection
+				list.forEach(item => {
+					let params = {
+						puid: item.puid
+					}
+					releaseCustomerFun(params).then(res => {
+						if (res.data.success) {
+							count++
+						}
+					})
+				})
+				setTimeout(() => {
+					this.$message({
+						showClose: true,
+						message: `操作完成！成功${count}条，失败${this.multipleSelection.length - count}条!`,
+						type: 'success'
+					})
+					this.getDoneCustomerList()
+					this.getMyCustomerList()
+				}, 1000)
+			},
+			//所有员工
+			getAllUserByMch() {
+				let params = {
+					is_payroll: 1,
+					group_id: this.userInfo.group_id
+				}
+				getAllUserByMchFun(params).then(res => {
+					if (res.data.success) {
+						this.employeeList = res.data.data
+					}
+				})
+			},
+			changeFollower() {
+				let count = 0
+				let list = this.showChangeFollower === 1 ? this.multipleSelection : this.doneSelection
+				let salesman_name = this.employeeList.filter(item => item.id == this.salesman)[0].name
+				list.forEach(item => {
+					let params = {
+						salesman_name,
+						salesman_id: this.salesman,
+						id: item.id
+					}
+					changeFollowFun(params).then(res => {
+						if (res.data.success) {
+							count++
+						}
+					})
+				})
+				setTimeout(() => {
+					this.$message({
+						showClose: true,
+						message: `操作完成！成功${count}条，失败${this.multipleSelection.length - count}条!`,
+						type: 'success'
+					})
+					this.getDoneCustomerList()
+					this.getMyCustomerList()
+					this.showChangeFollower = ''
+				}, 1000)
+			},
+			provinceChange(value) {
+				this.city = Object.keys(ChinaAddress[value])
+			},
+			cityChange() {
+				this.county = ChinaAddress[this.customerInfo.province][this.customerInfo.city]
+			},
+			handleSelectionChange(val) {
+				this.multipleSelection = val
+			},
+			doneSelectionChange(val) {
+				this.doneSelection = val
+			},
+			// 上下分页
+			handleCurrentChange(page) {
+				this.paginations.page_index = page
+				this.getOrderList()
+			},
+			// 每页多少条切换
+			handleSizeChange(page_size) {
+				this.paginations.page_size = page_size
+				this.getOrderList()
+			},
+			closeAddOrder() {
+				this.showAddOrder = false
+			}
+		}
+	}
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
     .btn-add-customer {

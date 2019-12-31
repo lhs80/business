@@ -40,7 +40,7 @@
             <el-table-column type="selection"></el-table-column>
             <el-table-column prop="name" label="客户姓名">
                 <template slot-scope="scope">
-                    <router-link :to="{path: '/superAdmin/followList/detail',query:{id:scope.row.id,type:1}}">
+                    <router-link :to="{path: '/superAdmin/followList/detail',query:{puid:scope.row.puid,type:1}}">
                         <b class="text-info">{{scope.row.name}}</b>
                     </router-link>
                 </template>
@@ -52,7 +52,6 @@
                     <span>{{scope.row.province}}{{scope.row.city}}{{scope.row.county}}{{scope.row.address}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="brand_names" label="品牌"></el-table-column>
             <el-table-column prop="cdate" label="创建时间">
                 <template slot-scope="scope">
                     <span>{{$moment(scope.row.cdate*1000).format('YYYY-MM-DD')}}</span>

@@ -347,7 +347,7 @@ const user = {
 							parentId: 1,
 							children: [],
 							icon: '',
-							name: '客户公海',
+							name: '客户关系',
 							url: '',
 							spread: false,
 							path: 'openList',
@@ -356,7 +356,7 @@ const user = {
 							redirect: null,
 							code: null,
 							type: '0',
-							label: '客户公海',
+							label: '客户关系',
 							sort: 1
 						}, {
 							id: 2,
@@ -408,7 +408,7 @@ const user = {
 							sort: 1
 						}],
 						icon: 'icon-xitongguanli',
-						name: '客户公海',
+						name: '客户关系',
 						url: null,
 						spread: false,
 						path: '/superAdmin',
@@ -417,7 +417,7 @@ const user = {
 						redirect: null,
 						code: null,
 						type: '0',
-						label: '客户公海',
+						label: '客户关系',
 						sort: 1
 					},
 					{
@@ -1202,7 +1202,7 @@ const user = {
 							parentId: 1,
 							children: [],
 							icon: '',
-							name: '客户公海',
+							name: '客户关系',
 							url: '',
 							spread: false,
 							path: 'openList',
@@ -1211,7 +1211,7 @@ const user = {
 							redirect: null,
 							code: null,
 							type: '0',
-							label: '客户公海',
+							label: '客户关系',
 							sort: 1
 						}, {
 							id: 2,
@@ -1263,7 +1263,7 @@ const user = {
 							sort: 1
 						},],
 						icon: 'icon-xitongguanli',
-						name: '客户公海',
+						name: '客户关系',
 						url: null,
 						spread: false,
 						path: '/superAdmin',
@@ -1272,7 +1272,7 @@ const user = {
 						redirect: null,
 						code: null,
 						type: '0',
-						label: '客户公海',
+						label: '客户关系',
 						sort: 1
 					},
 					{
@@ -1864,7 +1864,7 @@ const user = {
 							parentId: 1,
 							children: [],
 							icon: '',
-							name: '客户公海',
+							name: '客户关系',
 							url: '',
 							spread: false,
 							path: 'openList',
@@ -1873,7 +1873,7 @@ const user = {
 							redirect: null,
 							code: null,
 							type: '0',
-							label: '客户公海',
+							label: '客户关系',
 							sort: 1
 						}, {
 							id: 2,
@@ -1927,7 +1927,7 @@ const user = {
 							// }
 						],
 						icon: 'icon-xitongguanli',
-						name: '客户公海',
+						name: '客户关系',
 						url: null,
 						spread: false,
 						path: '/superAdmin',
@@ -1936,7 +1936,7 @@ const user = {
 						redirect: null,
 						code: null,
 						type: '0',
-						label: '客户公海',
+						label: '客户关系',
 						sort: 1
 					},
 					{
