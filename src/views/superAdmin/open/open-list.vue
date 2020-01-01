@@ -197,6 +197,8 @@
               message: '导入成功',
               type: 'success'
             })
+          }else{
+            this.$message.error(res.data.msg)
           }
         })
       },
