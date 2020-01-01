@@ -504,7 +504,8 @@ const urlCol = {
     },
     order: {
       list: {
-        url: '/admin/order/getOrderList'
+        // url: '/admin/order/getOrderList'
+        url: '/mch/salesman/getSalesmanOrders'
       }
     },
     data: {

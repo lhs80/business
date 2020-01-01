@@ -347,7 +347,7 @@ const user = {
 							parentId: 1,
 							children: [],
 							icon: '',
-							name: '客户关系',
+							name: '客户公海',
 							url: '',
 							spread: false,
 							path: 'openList',
@@ -356,7 +356,7 @@ const user = {
 							redirect: null,
 							code: null,
 							type: '0',
-							label: '客户关系',
+							label: '客户公海',
 							sort: 1
 						}, {
 							id: 2,
@@ -1202,7 +1202,7 @@ const user = {
 							parentId: 1,
 							children: [],
 							icon: '',
-							name: '客户关系',
+							name: '客户公海',
 							url: '',
 							spread: false,
 							path: 'openList',
@@ -1211,7 +1211,7 @@ const user = {
 							redirect: null,
 							code: null,
 							type: '0',
-							label: '客户关系',
+							label: '客户公海',
 							sort: 1
 						}, {
 							id: 2,
@@ -1864,7 +1864,7 @@ const user = {
 							parentId: 1,
 							children: [],
 							icon: '',
-							name: '客户关系',
+							name: '客户公海',
 							url: '',
 							spread: false,
 							path: 'openList',
@@ -1873,7 +1873,7 @@ const user = {
 							redirect: null,
 							code: null,
 							type: '0',
-							label: '客户关系',
+							label: '客户公海',
 							sort: 1
 						}, {
 							id: 2,
