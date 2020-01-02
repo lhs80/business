@@ -74,16 +74,17 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                        v-if="myPaginations.total > 0"
-                        :page-sizes="myPaginations.pageSizes"
-                        :page-size="myPaginations.page_size"
-                        :layout="myPaginations.layout"
-                        :total="myPaginations.total"
-                        :current-page="myPaginations.page_index"
-                        @current-change="handleCurrentChange"
-                        @size-change="handleSizeChange"
-                ></el-pagination>
+                <div class="mt2 text-right">
+                    <el-pagination
+                            :page-sizes="myPaginations.pageSizes"
+                            :page-size="myPaginations.page_size"
+                            :layout="myPaginations.layout"
+                            :total="myPaginations.total"
+                            :current-page="myPaginations.page_index"
+                            @current-change="handleCurrentChange"
+                            @size-change="handleSizeChange"
+                    ></el-pagination>
+                </div>
             </el-tab-pane>
             <el-tab-pane label="我的成交客户" name="second">
                 <!--菜单栏-->
@@ -139,7 +140,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="phone" label="客户电话"></el-table-column>
-                    <el-table-column prop="brand_name" label="品牌"></el-table-column>
+                    <el-table-column prop="brand_names" label="品牌"></el-table-column>
                     <el-table-column prop="wechat" label="客户微信"></el-table-column>
                     <el-table-column prop="type" label="客户类型"></el-table-column>
                     <el-table-column prop="spend_count" label="业绩订单"></el-table-column>
@@ -151,16 +152,18 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                        v-if="donePaginations.total > 0"
-                        :page-sizes="donePaginations.pageSizes"
-                        :page-size="donePaginations.page_size"
-                        :layout="donePaginations.layout"
-                        :total="donePaginations.total"
-                        :current-page="donePaginations.page_index"
-                        @current-change="handleCurrentChange"
-                        @size-change="handleSizeChange"
-                ></el-pagination>
+                <div class="mt2 text-right">
+                    <el-pagination
+                            v-if="donePaginations.total > 0"
+                            :page-sizes="donePaginations.pageSizes"
+                            :page-size="donePaginations.page_size"
+                            :layout="donePaginations.layout"
+                            :total="donePaginations.total"
+                            :current-page="donePaginations.page_index"
+                            @current-change="doneHandleCurrentChange"
+                            @size-change="doneHandleSizeChange"
+                    ></el-pagination>
+                </div>
             </el-tab-pane>
         </el-tabs>
         <!--新增客户-->
@@ -500,10 +503,10 @@
 				let params = {
 					pageSize: 1000,
 					pageIndex: 1
-				}
+				};
 				postListFun(params).then(res => {
 					if (res.data.success) {
-						this.brandList = res.data.data.data
+						this.brandList = res.data.data.data;
 					}
 				})
 			},
@@ -511,12 +514,13 @@
 			getDoneCustomerList() {
 				let params = {
 					...this.searchDoneParams,
-					pageSize: this.myPaginations.page_size,
-					pageIndex: this.myPaginations.page_index
-				}
+					pageSize: this.donePaginations.page_size,
+					pageIndex: this.donePaginations.page_index
+				};
 				followDoneListFun(params).then(res => {
 					if (res.data.success) {
-						this.doneCusList = res.data.data.data
+						this.doneCusList = res.data.data.data;
+						this.donePaginations.total = res.data.data.pageinfo.count;
 					}
 				})
 			},
@@ -526,10 +530,11 @@
 					...this.searchMyParams,
 					pageSize: this.myPaginations.page_size,
 					pageIndex: this.myPaginations.page_index
-				}
+				};
 				followMyListFun(params).then(res => {
 					if (res.data.success) {
-						this.myCusList = res.data.data.data
+						this.myCusList = res.data.data.data;
+						this.myPaginations.total = res.data.data.pageinfo.count;
 					}
 				})
 			},
@@ -593,7 +598,7 @@
 				list.forEach(item => {
 					let params = {
 						puid: item.puid
-					}
+					};
 					releaseCustomerFun(params).then(res => {
 						if (res.data.success) {
 							count++
@@ -637,15 +642,15 @@
 							count++
 						}
 					})
-				})
+				});
 				setTimeout(() => {
 					this.$message({
 						showClose: true,
 						message: `操作完成！成功${count}条，失败${this.multipleSelection.length - count}条!`,
 						type: 'success'
-					})
-					this.getDoneCustomerList()
-					this.getMyCustomerList()
+					});
+					this.getDoneCustomerList();
+					this.getMyCustomerList();
 					this.showChangeFollower = ''
 				}, 1000)
 			},
@@ -661,15 +666,25 @@
 			doneSelectionChange(val) {
 				this.doneSelection = val
 			},
-			// 上下分页
+			// 我的跟进客户上下分页
 			handleCurrentChange(page) {
-				this.paginations.page_index = page
-				this.getOrderList()
+				this.myPaginations.page_index = page
+				this.getMyCustomerList()
 			},
-			// 每页多少条切换
+			// 我的跟进客户每页多少条切换
 			handleSizeChange(page_size) {
-				this.paginations.page_size = page_size
-				this.getOrderList()
+				this.myPaginations.page_size = page_size
+				this.getMyCustomerList()
+			},
+			// 我的成交客户上下分页
+			doneHandleCurrentChange(page) {
+				this.donePaginations.page_index = page
+				this.getMyCustomerList()
+			},
+			// 我的成交客户每页多少条切换
+			doneHandleSizeChange(page_size) {
+				this.donePaginations.page_size = page_size
+				this.getMyCustomerList()
 			},
 			closeAddOrder() {
 				this.showAddOrder = false

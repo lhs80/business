@@ -271,7 +271,7 @@
 			},
 			//添加到进货单
 			addToCart() {
-				this.resultProduct = []
+				this.resultProduct = [];
 				this.cartList.forEach(item => {
 					if (item.count > 0) {
 						this.orderInfo.total += item.price * item.count
