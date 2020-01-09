@@ -678,13 +678,13 @@
 			},
 			// 我的成交客户上下分页
 			doneHandleCurrentChange(page) {
-				this.donePaginations.page_index = page
-				this.getMyCustomerList()
+				this.donePaginations.page_index = page;
+				this.getDoneCustomerList()
 			},
 			// 我的成交客户每页多少条切换
 			doneHandleSizeChange(page_size) {
-				this.donePaginations.page_size = page_size
-				this.getMyCustomerList()
+				this.donePaginations.page_size = page_size;
+				this.getDoneCustomerList()
 			},
 			closeAddOrder() {
 				this.showAddOrder = false
