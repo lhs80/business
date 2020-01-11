@@ -3,7 +3,7 @@
         <!--菜单栏-->
         <div class="bg-white text-right">
             <div style="width:200px;display:inline-block">
-                <el-select v-model="searchParams.group_id" size="small" placeholder="请选择团队">
+                <el-select v-model="searchParams.group_id" size="small" placeholder="请选择团队" @change="(value)=>getAllUserByMch(value)">
                     <el-option v-for="(item,index) in allTeamList"
                                :value="item.group_id"
                                :key="index"
@@ -14,10 +14,10 @@
             </div>
             <div style="width:200px;display:inline-block">
                 <el-select v-model="searchParams.group_id" size="small" placeholder="请选择业务员">
-                    <el-option v-for="(item,index) in allTeamList"
-                               :value="item.group_id"
+                    <el-option v-for="(item,index) in staffData"
+                               :value="item.id"
                                :key="index"
-                               :label="item.group_name"
+                               :label="item.real_name"
                     >
                     </el-option>
                 </el-select>
@@ -68,7 +68,8 @@
 	import {
 		teamReportFun,
 		personReportFun,
-		teamsListFun
+		teamsListFun,
+		getAllUserByMchFun
 	} from '@/api/activity'
 
 	export default {
@@ -78,12 +79,12 @@
 				searchParams: {},
 				teamList: [],
 				allTeamList: [],
-				bussinessList: []
+				bussinessList: [],
+				staffData: []
 			}
 		},
 		mounted() {
 			this.getAllTeams();
-			this.getTeamReport();
 			this.businessReport();
 		},
 		methods: {
@@ -95,11 +96,15 @@
 					}
 				})
 			},
-			//团队报表
-			getTeamReport() {
-				teamReportFun().then(res => {
+			/** 业务员列表 */
+			getAllUserByMch(groupId) {
+				let params = {
+					group_id: groupId
+				};
+				getAllUserByMchFun(params).then(res => {
+					console.log('staff', res);
 					if (res.data.success) {
-						this.teamList = res.data.data;
+						this.staffData = res.data.data;
 					}
 				})
 			},
