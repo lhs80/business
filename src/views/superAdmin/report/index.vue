@@ -2,6 +2,15 @@
     <div style="position:relative" class="app-container calendar-list-container client-list">
         <el-tabs v-model="activeName" @change="multipleSelection=[]">
             <el-tab-pane label="团队报表" name="first">
+                <div class="text-right">
+                    <el-button size="small" type="primary">
+                        <a href="http://sht.qicheen.com/mch/salesman/getFollowReportGroupExport"
+                           target="_blank"
+                        >
+                            导出报表
+                        </a>
+                    </el-button>
+                </div>
                 <el-table :data="teamList" stripe style="width: 100%">
                     <el-table-column prop="group_name" label="团队名称"></el-table-column>
                     <el-table-column prop="mg_name" label="团队经理"></el-table-column>
@@ -30,7 +39,11 @@
                     </div>
                     <el-button size="small" type="primary" @click="businessReport">搜索</el-button>
                     <el-button size="small" type="primary">
-                        <a href="getFollowReportExport">导出报表</a>
+                        <a :href="`http://sht.qicheen.com/mch/salesman/getFollowReportExport?group_id=${searchParams.group_id || ''}&searchKey=${searchParams.searchKey || ''}`"
+                           target="_blank"
+                        >
+                            导出报表
+                        </a>
                     </el-button>
                 </div>
                 <el-table :data="bussinessList" stripe style="width: 100%">
