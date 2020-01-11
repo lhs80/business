@@ -1267,3 +1267,36 @@ export function addOrderFun(data) {
 		data
 	})
 }
+
+/**
+ * 团队报表
+ * */
+export function teamReportFun(params) {
+	return request({
+		url: urlCol.report.team.url,
+		method: 'get',
+		params
+	})
+}
+
+/**
+ * 业务员报表
+ * */
+export function personReportFun(params) {
+	return request({
+		url: urlCol.report.person.url,
+		method: 'get',
+		params
+	})
+}
+
+/**
+ * 团队列表
+ * */
+export function teamsListFun(params) {
+	return request({
+		url: urlCol.report.teams.url,
+		method: 'get',
+		params
+	})
+}
