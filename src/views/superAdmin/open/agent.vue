@@ -5,7 +5,7 @@
             <span class="h5 prl1">品牌：</span>
             <div style="width:100px;display:inline-block;">
                 <el-select size="small" v-model="searchParams.brand_id" placeholder="请选择">
-                    <el-option v-for="(item,index) in brandList" :value="item.poster_id" :label="item.poster_name"></el-option>
+                    <el-option :key="index" v-for="(item,index) in brandList" :value="item.poster_id" :label="item.poster_name"></el-option>
                 </el-select>
             </div>
             <span class="h5 prl1">区域：</span>

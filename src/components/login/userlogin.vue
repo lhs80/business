@@ -125,7 +125,6 @@
                     name: 'userinfo',
                     content: response.data.data
                   });
-                  console.log(response.data.data);
                   _this.$store.dispatch("GetMenu").then(data => {
                     initMenu(_this.$router, data);
                     if (!_this.$route.query.path) {
@@ -158,6 +157,7 @@
                     content: response.data.data
                   });
                   this.$store.dispatch("GetMenu").then(data => {
+                    console.log('login',data);
                     initMenu(_this.$router, data);
                     if (!_this.$route.query.path) {
 

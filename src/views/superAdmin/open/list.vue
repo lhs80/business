@@ -11,8 +11,6 @@
                         <span class="h5" style="display:inline-block;width:100px">客户类型：</span>
                         <span>
               <el-radio v-model="searchMyParams.type" label="">全部</el-radio>
-              <el-radio v-model="searchMyParams.type" label="代理">代理</el-radio>
-              <el-radio v-model="searchMyParams.type" label="S">S</el-radio>
               <el-radio v-model="searchMyParams.type" label="A">A</el-radio>
               <el-radio v-model="searchMyParams.type" label="B">B</el-radio>
               <el-radio v-model="searchMyParams.type" label="C">C</el-radio>
@@ -94,9 +92,9 @@
                         <span>
                           <el-radio v-model="searchDoneParams.type" label="1">代理</el-radio>
                           <el-radio v-model="searchDoneParams.type" label="2">S</el-radio>
-                          <el-radio v-model="searchDoneParams.type" label="2">A</el-radio>
-                          <el-radio v-model="searchDoneParams.type" label="2">B</el-radio>
-                          <el-radio v-model="searchDoneParams.type" label="2">C</el-radio>
+<!--                          <el-radio v-model="searchDoneParams.type" label="2">A</el-radio>-->
+<!--                          <el-radio v-model="searchDoneParams.type" label="2">B</el-radio>-->
+<!--                          <el-radio v-model="searchDoneParams.type" label="2">C</el-radio>-->
                         </span>
                     </div>
                     <div>
@@ -227,8 +225,8 @@
                 <el-form-item label="类型" :label-width="formLabelWidth">
                     <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
                         <el-option value="" label="">全部</el-option>
-                        <el-option value="代理" label="代理">代理</el-option>
-                        <el-option value="S" label="S">S</el-option>
+<!--                        <el-option value="代理" label="代理">代理</el-option>-->
+<!--                        <el-option value="S" label="S">S</el-option>-->
                         <el-option value="A" label="A">A</el-option>
                         <el-option value="B" label="B">B</el-option>
                         <el-option value="C" label="C">C</el-option>
