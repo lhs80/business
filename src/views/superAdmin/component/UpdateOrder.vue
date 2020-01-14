@@ -233,9 +233,9 @@
 						this.orderInfo = {
 							total: res.data.data.order_total,
 							express_cost: res.data.data.express_cost,
-							province: res.data.data.province,
-							city: res.data.data.city,
-							county: res.data.data.county,
+							province: res.data.data.address_snap.province,
+							city: res.data.data.address_snap.city,
+							county: res.data.data.address_snap.county,
 							address: res.data.data.address,
 							remark: res.data.data.message
 						}
