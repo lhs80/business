@@ -426,6 +426,9 @@ const urlCol = {
 			},
 			changeToMyCustomer: {
 				url: '/mch/salesman/transformMyFollowCustomer'
+			},
+			tips: {
+				url: '/mch/salesman/getNoticPCustomer'
 			}
 		},
 	},
