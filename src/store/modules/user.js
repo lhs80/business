@@ -1071,7 +1071,58 @@ const user = {
 						type: '0',
 						label: '系统设置',
 						sort: 10
-					}
+					},
+					{
+						id: 3,
+						parentId: -2,
+						children: [
+							{
+								id: 3,
+								parentId: 1,
+								children: [],
+								icon: '',
+								name: '跟进报表',
+								url: '',
+								spread: false,
+								path: 'report',
+								component: 'views/superAdmin/report/index',
+								authority: null,
+								redirect: null,
+								code: null,
+								type: '0',
+								label: '跟进报表',
+								sort: 1
+							}, {
+								id: 3,
+								parentId: 1,
+								children: [],
+								icon: '',
+								name: '客户报表',
+								url: '',
+								spread: false,
+								path: 'customreport',
+								component: 'views/superAdmin/report/cus-report',
+								authority: null,
+								redirect: null,
+								code: null,
+								type: '0',
+								label: '客户报表',
+								sort: 1
+							}
+						],
+						icon: 'icon-xitongguanli',
+						name: '报表',
+						url: null,
+						spread: false,
+						path: '/superAdmin',
+						component: 'Layout',
+						authority: null,
+						redirect: null,
+						code: null,
+						type: '0',
+						label: '报表',
+						sort: 2
+					},
 				];
 
 				//超管菜单
@@ -1576,58 +1627,7 @@ const user = {
 						label: '设置',
 						sort: 1
 					},
-          {
-            id: 3,
-            parentId: -2,
-            children: [
-              {
-                id: 3,
-                parentId: 1,
-                children: [],
-                icon: '',
-                name: '跟进报表',
-                url: '',
-                spread: false,
-                path: 'report',
-                component: 'views/superAdmin/report/index',
-                authority: null,
-                redirect: null,
-                code: null,
-                type: '0',
-                label: '跟进报表',
-                sort: 1
-              },	{
-                id: 3,
-                parentId: 1,
-                children: [],
-                icon: '',
-                name: '客户报表',
-                url: '',
-                spread: false,
-                path: 'customreport',
-                component: 'views/superAdmin/report/cus-report',
-                authority: null,
-                redirect: null,
-                code: null,
-                type: '0',
-                label: '客户报表',
-                sort: 1
-              }
-            ],
-            icon: 'icon-xitongguanli',
-            name: '报表',
-            url: null,
-            spread: false,
-            path: '/superAdmin',
-            component: 'Layout',
-            authority: null,
-            redirect: null,
-            code: null,
-            type: '0',
-            label: '报表',
-            sort: 2
-          },
-					];
+				];
 
 				//发货员菜单
 				const sendData = [
@@ -1955,57 +1955,57 @@ const user = {
 						label: '订单管理',
 						sort: 2
 					},
-          {
-            id: 3,
-            parentId: -2,
-            children: [
-            	{
-            		id: 3,
-            		parentId: 1,
-            		children: [],
-            		icon: '',
-            		name: '跟进报表',
-            		url: '',
-            		spread: false,
-            		path: 'report',
-            		component: 'views/superAdmin/report/index',
-            		authority: null,
-            		redirect: null,
-            		code: null,
-            		type: '0',
-            		label: '跟进报表',
-            		sort: 1
-            	},	{
-            		id: 3,
-            		parentId: 1,
-            		children: [],
-            		icon: '',
-            		name: '客户报表',
-            		url: '',
-            		spread: false,
-            		path: 'customreport',
-            		component: 'views/superAdmin/report/cus-report',
-            		authority: null,
-            		redirect: null,
-            		code: null,
-            		type: '0',
-            		label: '客户报表',
-            		sort: 1
-            	}
-            ],
-            icon: 'icon-xitongguanli',
-            name: '报表',
-            url: null,
-            spread: false,
-            path: '/superAdmin',
-            component: 'Layout',
-            authority: null,
-            redirect: null,
-            code: null,
-            type: '0',
-            label: '报表',
-            sort: 2
-          },
+					{
+						id: 3,
+						parentId: -2,
+						children: [
+							{
+								id: 3,
+								parentId: 1,
+								children: [],
+								icon: '',
+								name: '跟进报表',
+								url: '',
+								spread: false,
+								path: 'report',
+								component: 'views/superAdmin/report/index',
+								authority: null,
+								redirect: null,
+								code: null,
+								type: '0',
+								label: '跟进报表',
+								sort: 1
+							}, {
+								id: 3,
+								parentId: 1,
+								children: [],
+								icon: '',
+								name: '客户报表',
+								url: '',
+								spread: false,
+								path: 'customreport',
+								component: 'views/superAdmin/report/cus-report',
+								authority: null,
+								redirect: null,
+								code: null,
+								type: '0',
+								label: '客户报表',
+								sort: 1
+							}
+						],
+						icon: 'icon-xitongguanli',
+						name: '报表',
+						url: null,
+						spread: false,
+						path: '/superAdmin',
+						component: 'Layout',
+						authority: null,
+						redirect: null,
+						code: null,
+						type: '0',
+						label: '报表',
+						sort: 2
+					},
 				];
 
 				if (!data) {

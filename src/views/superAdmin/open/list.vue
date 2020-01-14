@@ -92,9 +92,9 @@
                         <span>
                           <el-radio v-model="searchDoneParams.type" label="1">代理</el-radio>
                           <el-radio v-model="searchDoneParams.type" label="2">S</el-radio>
-<!--                          <el-radio v-model="searchDoneParams.type" label="2">A</el-radio>-->
-<!--                          <el-radio v-model="searchDoneParams.type" label="2">B</el-radio>-->
-<!--                          <el-radio v-model="searchDoneParams.type" label="2">C</el-radio>-->
+                            <!--                          <el-radio v-model="searchDoneParams.type" label="2">A</el-radio>-->
+                            <!--                          <el-radio v-model="searchDoneParams.type" label="2">B</el-radio>-->
+                            <!--                          <el-radio v-model="searchDoneParams.type" label="2">C</el-radio>-->
                         </span>
                     </div>
                     <div>
@@ -225,8 +225,8 @@
                 <el-form-item label="类型" :label-width="formLabelWidth">
                     <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
                         <el-option value="" label="">全部</el-option>
-<!--                        <el-option value="代理" label="代理">代理</el-option>-->
-<!--                        <el-option value="S" label="S">S</el-option>-->
+                        <!--                        <el-option value="代理" label="代理">代理</el-option>-->
+                        <!--                        <el-option value="S" label="S">S</el-option>-->
                         <el-option value="A" label="A">A</el-option>
                         <el-option value="B" label="B">B</el-option>
                         <el-option value="C" label="C">C</el-option>
@@ -270,7 +270,7 @@
                 <el-button @click="showExportCustomer = false">取消</el-button>
                 <el-button type="primary" @click="saveCustomer()">保存</el-button>
             </div>
-        </el-dialog><!--新增客户-->
+        </el-dialog>
         <!--编辑客户-->
         <el-dialog title="编辑客户信息" :visible="showEditCustomer" width="600px" :show-close="false">
             <el-form :model="customerInfo">
@@ -407,8 +407,7 @@
             </div>
         </el-dialog>
         <!--添加订单-->
-        <AddOrder @close='closeAddOrder' :show="showAddOrder" :brandList="brandList"
-                  :puid="curPuid"></AddOrder>
+        <AddOrder @close='closeAddOrder' :show="showAddOrder"></AddOrder>
     </div>
 </template>
 <script>
@@ -440,6 +439,7 @@
 				activeName: 'first',
 				formLabelWidth: '50px',
 				showExportCustomer: false,
+				showAddOrder: false,
 				showFollowRecord: '',
 				showAddOrder: false,
 				showEditCustomer: false,

@@ -160,13 +160,14 @@
 </template>
 
 <script>
-	import {queryPostDetailFun, queryGoodsDetailFun, addOrderFun} from '@/api/activity'
+	import {queryPostDetailFun, queryGoodsDetailFun, addOrderFun, postListFun, getOrderDetailForUpdateOrderFun} from '@/api/activity'
 	import ChinaAddress from '@/common/china_address_v4.json'
 
 	export default {
-		props: ['show', 'brandList', 'puid'],
+		props: ['show', 'curOrderItem'],
 		data() {
 			return {
+				brandList: [],
 				province: Object.keys(ChinaAddress),
 				city: [],
 				county: [],
@@ -196,7 +197,6 @@
 			queryCount() {
 				return function (item) {
 					let index = -1;
-					// let index = this.cartList.findIndex(list => list.norm_item_arr[0].subId === this.firstNorm.item_id && list.norm_item_arr[1].subId === item.item_id)
 					if (this.prodInfo.normMap.length > 1)
 						index = this.cartList.findIndex(list => list.norm_item_arr[0].subId === this.firstNorm.item_id && list.norm_item_arr[1].subId === item.item_id)
 					else
@@ -205,7 +205,54 @@
 				}
 			}
 		},
+		mounted() {
+			this.queryBrandList();
+		},
+		watch: {
+			curOrderItem(value) {
+				this.queryDetail();
+			}
+		},
 		methods: {
+			queryDetail() {
+				let params = {
+					order_id: this.curOrderItem.order_id
+				};
+				getOrderDetailForUpdateOrderFun(params).then(res => {
+					this.resultProduct = [];
+					if (res.data.success) {
+						res.data.data.goods[0].countInfo.forEach(item => {
+							this.resultProduct.push({
+								brandName: '',
+								count: item.count,
+								norm_item_arr: item.norm_snap,
+								productName: res.data.data.goods[0].goods_name,
+								sku_id: item.sku_id
+							})
+						});
+						this.orderInfo = {
+							total: res.data.data.order_total,
+							express_cost: res.data.data.express_cost,
+							province: res.data.data.province,
+							city: res.data.data.city,
+							county: res.data.data.county,
+							address: res.data.data.address,
+							remark: res.data.data.message
+						}
+					}
+				})
+			},
+			queryBrandList() {
+				let params = {
+					pageSize: 1000,
+					pageIndex: 1
+				};
+				postListFun(params).then(res => {
+					if (res.data.success) {
+						this.brandList = res.data.data.data;
+					}
+				})
+			},
 			close() {
 				this.brandId = '';
 				this.prodId = '';
@@ -274,8 +321,8 @@
 				this.resultProduct = [];
 				this.cartList.forEach(item => {
 					if (item.count > 0) {
-						this.orderInfo.total += item.price * item.count
-						const {sku_id, count, norm_item_arr} = item
+						this.orderInfo.total += item.price * item.count;
+						const {sku_id, count, norm_item_arr} = item;
 						this.resultProduct.push({
 							brandName: this.brandList.filter(brand => brand.poster_id === this.brandId)[0].poster_name,
 							productName: this.prodInfo.goods_name,
@@ -284,8 +331,7 @@
 							norm_item_arr
 						});
 					}
-				});
-				console.log(this.resultProduct);
+				})
 			},
 			saveOrder() {
 				const {express_cost, province, remark, address, city, county, total} = this.orderInfo;
@@ -296,7 +342,7 @@
 					address,
 					city,
 					county,
-					puid: this.puid,
+					puid: this.curOrderItem.uid,
 					countInfo: [],
 					order_total: Number(total) + Number(express_cost)
 				};

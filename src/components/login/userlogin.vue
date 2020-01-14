@@ -110,7 +110,6 @@
           _this.$refs.loginForm.validate(valid => {
             if (valid) {
               login(_this.loginForm).then(response => {
-                console.log("login",response)
                 if (response.data.success) {
                   if (response.data.data.roleId === '6') {
                     _this.$store.commit("SET_LOGINTYPE", "sh-send");
@@ -129,7 +128,6 @@
                     initMenu(_this.$router, data);
                     if (!_this.$route.query.path) {
                       _this.$store.commit("ADD_TAG", _this.tagWel);
-                      console.log("tagWel", _this.tagWel);
                       _this.$router.push({path: this.tagWel.value});
                     } else {
                       _this.$router.push({path: _this.$route.query.path});

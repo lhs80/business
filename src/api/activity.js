@@ -227,6 +227,17 @@ export function getOrderDetailFun(params) {
 }
 
 /**
+ * 订单详情
+ **/
+export function getOrderDetailForUpdateOrderFun(params) {
+  return request({
+    url: urlCol.order.orderItemDetail.url,
+    method: 'get',
+    params
+  });
+}
+
+/**
  * 修改订单地址
  **/
 export function updateOrderAddressFun(data) {
