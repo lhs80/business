@@ -488,6 +488,9 @@ const urlCol = {
 			},
 			addorder: {
 				url: '/mch/salesman/addManuaOrder'
+			},
+			updateorder: {
+				url: '/mch/salesman/updateManuaOrder'
 			}
 		},
 	},

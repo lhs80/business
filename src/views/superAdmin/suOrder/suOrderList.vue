@@ -182,7 +182,7 @@
         </div>
         <div class="v-modal" tabindex="0" style="z-index: 80;" v-if="isShowDelive"></div>
         <!--添加订单-->
-        <UpdateOrder @close='closeAddOrder' :show="showUpdateOrder" :curOrderItem="curOrderItem"></UpdateOrder>
+        <UpdateOrder @close='closeAddOrder' :show="showUpdateOrder" :curOrderItem="curOrderItem" @getOrderList="getOrderList"></UpdateOrder>
     </div>
 </template>
 <script>

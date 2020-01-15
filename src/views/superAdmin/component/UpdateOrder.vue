@@ -1,6 +1,6 @@
 <template>
     <!--添加订单-->
-    <el-dialog title="添加订单" :visible="show" top="5vh" :show-close="false" width="850px" custom-class="add-order-dialog">
+    <el-dialog title="修改订单" :visible="show" top="5vh" :show-close="false" width="850px" custom-class="add-order-dialog">
         <el-row :gutter="40">
             <el-col :span="12">
                 <h3>选择商品</h3>
@@ -79,7 +79,7 @@
                     <el-table :data="resultProduct" size="small" stripe style="width: 100%">
                         <el-table-column prop="brandName" label="品牌"></el-table-column>
                         <el-table-column prop="productName" label="商品名称"></el-table-column>
-                        <el-table-column label="规格数量">
+                        <el-table-column label="规格数量" width="100">
                             <template slot-scope="scope">
                                 <el-row>
                                     <el-col :span="12">
@@ -89,6 +89,11 @@
                                     </el-col>
                                     <el-col :span="12">x{{ scope.row.count}}</el-col>
                                 </el-row>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="50">
+                            <template slot-scope="scope">
+                                <a class="text-danger" @click="removeItem(scope.$index)" style="cursor: pointer;">删除</a>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -160,7 +165,7 @@
 </template>
 
 <script>
-	import {queryPostDetailFun, queryGoodsDetailFun, addOrderFun, postListFun, getOrderDetailForUpdateOrderFun} from '@/api/activity'
+	import {queryPostDetailFun, queryGoodsDetailFun, updateOrderFun, postListFun, getOrderDetailForUpdateOrderFun} from '@/api/activity'
 	import ChinaAddress from '@/common/china_address_v4.json'
 
 	export default {
@@ -333,6 +338,9 @@
 					}
 				})
 			},
+			removeItem(index) {
+				this.resultProduct.splice(index, 1);
+			},
 			saveOrder() {
 				const {express_cost, province, remark, address, city, county, total} = this.orderInfo;
 				let params = {
@@ -344,20 +352,22 @@
 					county,
 					puid: this.curOrderItem.uid,
 					countInfo: [],
-					order_total: Number(total) + Number(express_cost)
+					order_total: Number(total) + Number(express_cost),
+					order_id: this.curOrderItem.order_id
 				};
 				this.resultProduct.forEach(item => {
 					const {sku_id, count} = item;
 					params.countInfo.push({sku_id, count})
 				});
-				addOrderFun(params).then(res => {
+				updateOrderFun(params).then(res => {
 					if (res.data.success) {
 						this.$emit('close');
 						this.$message({
 							showClose: true,
-							message: '添加成功',
+							message: '修改成功',
 							type: 'success'
 						});
+						this.$emit('getOrderList');
 						this.prodInfo = {};
 					}
 				});

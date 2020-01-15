@@ -147,12 +147,29 @@
 											res.data.data.threeDaysNotic.forEach(item => {
 												over3 += item.name + ' '
 											});
-											this.$message({
-												showClose: true,
-												message: `客户${over3}即将释放回公海，如想挽留，请保持跟进。\r\n客户${over4}，您已超过4天未跟进，请持续跟进或释放公海.\r\n客户${over15}已超过15天未下单，超过20天客户将释放回公海`,
-												type: 'w',
-												duration: 10000
-											});
+											if (over4 || over3 || over15) {
+												this.$message({
+													showClose: false,
+													dangerouslyUseHTMLString: true,
+													message: `<div class="prl1">客户${over3}即将释放回公海，如想挽留，请保持跟进。</div>`,
+													type: 'warning',
+													duration: 10000
+												});
+												this.$message({
+													showClose: false,
+													dangerouslyUseHTMLString: true,
+													message: `<div class="prl1">客户${over4}，您已超过4天未跟进，请持续跟进或释放公海。</div>`,
+													type: 'warning',
+													duration: 10000
+												});
+												this.$message({
+													showClose: false,
+													dangerouslyUseHTMLString: true,
+													message: `<div class="prl1">客户${over15}已超过15天未下单，超过20天客户将释放回公海</div>`,
+													type: 'warning',
+													duration: 10000
+												});
+											}
 										}
 									})
 								} else {

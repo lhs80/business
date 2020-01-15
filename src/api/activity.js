@@ -1333,3 +1333,14 @@ export function getOverTimeNoticFun(params) {
 		params
 	})
 }
+
+/**
+ * 修改订单
+ * */
+export function updateOrderFun(data) {
+	return request({
+		url: urlCol.follow.sheet.updateorder.url,
+		method: 'post',
+		data
+	})
+}
