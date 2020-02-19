@@ -159,8 +159,6 @@
 					dateType: '',
 					startdate: '',
 					enddate: '',
-					pageSize: 15,
-					pageIndex: 1,
 					searchKey: ''
 				},
 				paginations: {
@@ -181,7 +179,12 @@
 		},
 		methods: {
 			getCustomerList() {
-				openCustomerList(this.searchParams).then(res => {
+			  let params={
+			    ...this.searchParams,
+          pageSize: this.paginations.page_size,
+          pageIndex: this.paginations.page_index
+        };
+				openCustomerList(params).then(res => {
 					if (res.data.success) {
 						this.txList = res.data.data.data;
 						this.paginations.total= res.data.data.pageinfo.count;
@@ -192,7 +195,7 @@
 			saveCustomer() {
 				exportCustomerFun(this.customerInfo).then(res => {
 					if (res.data.success) {
-						this.showExportCustomer = false
+						this.showExportCustomer = false;
 						this.getCustomerList()
 						this.$message({
 							showClose: true,
@@ -205,7 +208,7 @@
 				})
 			},
 			async del() {
-				let count = 0
+				let count = 0;
 				await this.multipleSelection.forEach(item => {
 					let params = {
 						puid: item.puid,
@@ -215,7 +218,7 @@
 							count++
 						}
 					})
-				})
+				});
 				setTimeout(() => {
 					this.$message({
 						showClose: true,
