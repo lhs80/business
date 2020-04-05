@@ -1,5 +1,5 @@
 <style rel="stylesheet/scss" lang="scss" >
-	@import '../../../../static/laydate/theme/default/laydate.css';
+	/*@import '../../../../static/laydate/theme/default/laydate.css';*/
 </style>
 
 <template>
