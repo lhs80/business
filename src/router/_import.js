@@ -1,4 +1,4 @@
 module.exports = (file, path) => {
-  if (!path) path = 'components'
-  return require(`../${path}/${file}.vue`)
+  if (!path) path = 'components';
+  return import(`../${path}/${file}.vue`)
 }
