@@ -63,7 +63,7 @@
           <el-table-column prop="brand_names" label="品牌"></el-table-column>
           <el-table-column prop="otherBrand" label="其它品牌"></el-table-column>
           <el-table-column prop="wechat" label="客户微信"></el-table-column>
-          <el-table-column prop="wechat" label="性格"></el-table-column>
+<!--          <el-table-column prop="wechat" label="性格"></el-table-column>-->
           <el-table-column label="客户地址">
             <template slot-scope="scope">
               <span>{{scope.row.province}}{{scope.row.city}}{{scope.row.county}}{{scope.row.address}}</span>
@@ -101,12 +101,12 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="2" class="h5" style="display:inline-block;width:100px">品牌：</el-col>
+            <el-col :span="2" class="h5" style="display:inline-block;width:90px">品牌：</el-col>
             <el-col :span="22" class="text-left">
-              <span>
+              <span style="margin-left:10px">
                 <el-radio label="" v-model="searchDoneParams.brand_id">全部</el-radio>
               </span>
-              <span v-for="(item,index) in brandList">
+              <span class="prl1" v-for="(item,index) in brandList">
                 <el-radio
                   v-model="searchDoneParams.brand_id"
                   :label="item.poster_id" :key="index">{{item.poster_name}}</el-radio>
@@ -183,11 +183,11 @@
             <el-col :span="1" class="h5" style="display:inline-block;">品牌：</el-col>
             <el-col :span="23" class="text-left">
               <span style="margin-left:10px">
-                <el-radio label="" v-model="searchDoneParams.brand_id">全部</el-radio>
+                <el-radio label="" v-model="searchAllParams.brand_id">全部</el-radio>
               </span>
               <span class="prl1" v-for="(item,index) in brandList">
                 <el-radio
-                  v-model="searchDoneParams.brand_id"
+                  v-model="searchAllParams.brand_id"
                   :label="item.poster_id" :key="index">{{item.poster_name}}</el-radio>
               </span>
             </el-col>
@@ -207,8 +207,8 @@
             </template>
           </el-table-column>
           <el-table-column prop="phone" label="客户电话"></el-table-column>
-          <el-table-column prop="brand_names" label="客户微信"></el-table-column>
-          <el-table-column prop="wechat" label="品牌标记"></el-table-column>
+          <el-table-column prop="wechat" label="客户微信"></el-table-column>
+          <el-table-column prop="brand_names" label="品牌标记"></el-table-column>
           <el-table-column prop="type" label="客户类型"></el-table-column>
           <el-table-column prop="spend_count" label="是否成交">
             <template slot-scope="scope">
@@ -298,9 +298,9 @@
         <el-form-item label="微信" style="margin-bottom:15px">
           <el-input size="small" placeholder="请输入微信号" v-model="customerInfo.wechat" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性格" style="margin-bottom:15px">
-          <el-input size="small" placeholder="请输入客户性格" v-model="customerInfo.wechat" autocomplete="off"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="性格" style="margin-bottom:15px">-->
+<!--          <el-input size="small" placeholder="请输入客户性格" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
+<!--        </el-form-item>-->
         <el-form-item label="类型" prop="type" style="margin-bottom:15px">
           <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
             <el-option value="A" label="A"/>
@@ -313,7 +313,7 @@
             <el-button size="small" type="primary" @click="addNewAgent">添加</el-button>
           </div>
           <el-form-item style="margin-bottom:15px" class="mt1" label-width="0"
-                        v-for="(item,index) in customerInfo.agent_info">
+                        v-for="(item,index) in customerInfo.agent_info" :key="index">
             <el-col :span="5">
               <el-form-item label="品牌"
                             :prop="`agent_info.${index}.brand_id`"
@@ -445,9 +445,9 @@
         <el-form-item label="微信" style="margin-bottom:15px">
           <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性格" style="margin-bottom:15px">
-          <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="性格" style="margin-bottom:15px">-->
+<!--          <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
+<!--        </el-form-item>-->
         <el-form-item label="类型" prop="type" style="margin-bottom:15px">
           <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
             <el-option value="代理" label="代理" v-if="activeName==='second'"/>
@@ -462,7 +462,7 @@
             <el-button size="small" type="primary" @click="addNewAgent">添加</el-button>
           </div>
           <el-form-item style="margin-bottom:15px" class="mt1" label-width="0"
-                        v-for="(item,index) in customerInfo.agent_info">
+                        v-for="(item,index) in customerInfo.agent_info" :key="index">
             <el-col :span="5">
               <el-form-item label="品牌" prop="brand_id"
                             :prop="`agent_info.${index}.brand_id`"
@@ -633,6 +633,7 @@
         timeRange: '',
         searchMyParams: {},
         searchDoneParams: {},
+        searchAllParams: {},
         salesman: '',
         followRecordInfo: {
           cdate: new Date()
@@ -687,13 +688,22 @@
     watch: {
       searchMyParams: {
         handler() {
+          this.myPaginations.page_index = 1;
           this.getMyCustomerList();
         },
         deep: true,
       },
       searchDoneParams: {
         handler() {
+          this.donePaginations.page_index = 1;
           this.getDoneCustomerList();
+        },
+        deep: true,
+      },
+      searchAllParams: {
+        handler() {
+          this.thirdCustomerPaginations.page_index = 1;
+          this.getThirdCustomerList();
         },
         deep: true,
       }
@@ -755,7 +765,7 @@
       //全部客户
       getThirdCustomerList() {
         let params = {
-          ...this.searchDoneParams,
+          ...this.searchAllParams,
           pageSize: this.thirdCustomerPaginations.page_size,
           pageIndex: this.thirdCustomerPaginations.page_index,
           includeFollowCustomer: 1
