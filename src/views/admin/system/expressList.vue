@@ -347,7 +347,6 @@
 			 */
 			getAllAddress() {
 				addressListFun().then(res => {
-					console.log('address', res)
 					if (res.data.success) {
 						this.addressList = res.data.data
 					}
@@ -358,7 +357,6 @@
 			 */
 			eleSheetModelList() {
 				eleSheetModelListFun().then(res => {
-					console.log('sheetlist', res)
 					if (res.data.success) {
 						this.sheetList = res.data.data
 					}
@@ -380,7 +378,6 @@
 					uid: this.$route.query.uid
 				}
 				orderListFun(params).then(res => {
-					console.log('order', res.data)
 					if (res.data.success) {
 						this.orderList = res.data.data.data
 						this.paginations.page_count = res.data.data.pageinfo.totalpage
@@ -396,7 +393,6 @@
 					order_id: id
 				}
 				getOrderDetailFun(params).then(res => {
-					console.log(res)
 					if (res.data.success) {
 						this.detail = res.data.data
 						this.isShowDelive = true

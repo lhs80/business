@@ -337,7 +337,6 @@
         queryCustomerTrandFun(params).then(res => {
           if (res.data.success) {
             this.trandInfo = res.data.data
-            console.log(this.trandInfo)
           }
         })
       },
@@ -376,7 +375,6 @@
       },
       //查看跟进
       checkFollow(salesman_id) {
-        console.log('puid', this.customInfo.puid ? this.customInfo.puid : this.$route.query.puid)
         let params = {
           salesman_id,
           puid: this.customInfo.puid ? this.customInfo.puid : this.$route.query.puid

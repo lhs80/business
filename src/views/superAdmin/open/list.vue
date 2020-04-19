@@ -60,10 +60,10 @@
             </template>
           </el-table-column>
           <el-table-column prop="phone" label="客户电话"></el-table-column>
-          <el-table-column prop="brand_names" label="品牌"></el-table-column>
-          <el-table-column prop="otherBrand" label="其它品牌"></el-table-column>
+          <el-table-column prop="brand_names" label="标记品牌"></el-table-column>
+          <el-table-column prop="otherBrand" label="其它标记"></el-table-column>
           <el-table-column prop="wechat" label="客户微信"></el-table-column>
-<!--          <el-table-column prop="wechat" label="性格"></el-table-column>-->
+          <!--          <el-table-column prop="wech at" label="性格"></el-table-column>-->
           <el-table-column label="客户地址">
             <template slot-scope="scope">
               <span>{{scope.row.province}}{{scope.row.city}}{{scope.row.county}}{{scope.row.address}}</span>
@@ -298,9 +298,9 @@
         <el-form-item label="微信" style="margin-bottom:15px">
           <el-input size="small" placeholder="请输入微信号" v-model="customerInfo.wechat" autocomplete="off"></el-input>
         </el-form-item>
-<!--        <el-form-item label="性格" style="margin-bottom:15px">-->
-<!--          <el-input size="small" placeholder="请输入客户性格" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="性格" style="margin-bottom:15px">-->
+        <!--          <el-input size="small" placeholder="请输入客户性格" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
+        <!--        </el-form-item>-->
         <el-form-item label="类型" prop="type" style="margin-bottom:15px">
           <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
             <el-option value="A" label="A"/>
@@ -380,7 +380,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="showExportCustomer = false">取消</el-button>
-        <el-button type="primary" @click="saveCustomer()">保存</el-button>
+        <el-button type="primary" :loading="isAdd" @click="saveCustomer()">保存</el-button>
       </div>
     </el-dialog>
     <!--编辑客户-->
@@ -445,9 +445,9 @@
         <el-form-item label="微信" style="margin-bottom:15px">
           <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>
         </el-form-item>
-<!--        <el-form-item label="性格" style="margin-bottom:15px">-->
-<!--          <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="性格" style="margin-bottom:15px">-->
+        <!--          <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
+        <!--        </el-form-item>-->
         <el-form-item label="类型" prop="type" style="margin-bottom:15px">
           <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
             <el-option value="代理" label="代理" v-if="activeName==='second'"/>
@@ -468,7 +468,8 @@
                             :prop="`agent_info.${index}.brand_id`"
                             :rules="{ required: true, message: '请输入代理品牌'}"
               >
-                <el-select size="small" v-model="item.brand_id" placeholder="请选择">
+                <el-select size="small" v-model="item.brand_id" placeholder="请选择"
+                           @change="(value)=>setBrandName(value,index)">
                   <el-option v-for="(item,index) in brandList"
                              :value="item.poster_id"
                              :key="index"
@@ -529,7 +530,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="reset">取消</el-button>
-        <el-button type="primary" @click="editCustomerInfo()">保存</el-button>
+        <el-button type="primary" :loading="isAdd" @click="editCustomerInfo()">保存</el-button>
       </div>
     </el-dialog>
     <!--写跟进-->
@@ -574,7 +575,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="showFollowRecord = ''">取消</el-button>
-        <el-button type="primary" @click="addFollowRecord()">保存</el-button>
+        <el-button type="primary" :loading="isAdd" @click="addFollowRecord()">保存</el-button>
       </div>
     </el-dialog>
     <!--转移--团队经理权限-->
@@ -617,6 +618,7 @@
     components: {AddOrder},
     data() {
       return {
+        isAdd: false,
         curPuid: '',
         province: Object.keys(ChinaAddress),
         city: [],
@@ -779,12 +781,14 @@
       },
       //写跟进
       addFollowRecord() {
+        this.isAdd = true;
         let params = {
           puid: this.showFollowRecord,
           ...this.followRecordInfo
         };
         addFollowRecordFun(params).then(res => {
           if (res.data.success) {
+            this.isAdd=false;
             this.showFollowRecord = '';
             this.followRecordInfo = {};
             this.$message({
@@ -792,12 +796,19 @@
               message: '添加成功',
               type: 'success',
               center: true
-            })
+            });
+            this.getThirdCustomerList();
+            this.getDoneCustomerList();
+            this.getMyCustomerList();
+          }else{
+            this.isAdd=false;
+            this.$message.error(res.data.msg)
           }
         })
       },
       //新增客户
       saveCustomer() {
+        this.isAdd = true;
         this.$refs['customerForm'].validate(valid => {
           if (valid) {
             this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name
@@ -805,13 +816,17 @@
               if (res.data.success) {
                 this.customerInfo = {};
                 this.showExportCustomer = false;
+                this.isAdd = false;
                 this.getMyCustomerList();
                 this.getDoneCustomerList();
                 this.$message({
                   showClose: true,
                   message: '添加成功！',
                   type: 'success'
-                })
+                });
+              } else {
+                this.isAdd = false;
+                this.$message.error(res.data.msg)
               }
             })
           }
@@ -829,13 +844,18 @@
       },
       //编辑客户信息
       editCustomerInfo() {
+        this.isAdd = true;
         this.customerInfo.brand_names = this.brandList.filter(item => item.poster_id === this.customerInfo.brand_ids)[0].poster_name
         editCustomerInfoFun(this.customerInfo).then(res => {
           if (res.data.success) {
             this.showEditCustomer = false
-            this.customerInfo = {}
-            this.getDoneCustomerList()
-            this.getMyCustomerList()
+            this.customerInfo = {};
+            this.isAdd = false;
+            this.getDoneCustomerList();
+            this.getMyCustomerList();
+          } else {
+            this.isAdd = false;
+            this.$message.error(res.data.msg)
           }
         })
       },
@@ -974,8 +994,6 @@
       },
       //删除代理信息
       delAgent(index) {
-        console.log(index);
-        console.log(this.customerInfo.agent_info);
         this.customerInfo.agent_info.splice(index, 1)
       },
       //新增代理信息时，品牌变化时，取品牌名称

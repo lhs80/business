@@ -241,7 +241,6 @@
         })
       },
       cityChange(checked, value) {
-        console.log(this.selectCity);
         if (checked) {
           this.selectCity.push(value);
         }
@@ -251,7 +250,6 @@
         this.isAllCheck = this.city.length === this.selectCity.length;
       },
       editProvinceChange(value) {
-        console.log(this.fareInfo.items[this.editAreaIndex].city)
         this.city = [];
         Object.keys(ChinaAddress[value]).forEach((item, index) => {
           this.city.push({name: item, isSel: false});

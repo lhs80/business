@@ -44,7 +44,6 @@
        */
       getAllAddress() {
         addressListFun().then(res => {
-          console.log("address", res)
           if (res.data.success) {
             this.addressList = res.data.data;
           }

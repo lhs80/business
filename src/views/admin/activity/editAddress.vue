@@ -119,7 +119,6 @@
             res.data.data.forEach(item => {
               if (item.id === this.$route.query.id)
                 this.addressInfo = item;
-              console.log(this.addressInfo);
             })
           }
         })
@@ -131,7 +130,6 @@
         this.$refs[formName].validate(valid => {
           if (valid) {
             editAddressListFun(this.addressInfo).then(res => {
-              console.log(res);
               if (res.data.success) {
                 this.$message({
                   showClose: true,

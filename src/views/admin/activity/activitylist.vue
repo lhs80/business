@@ -82,7 +82,6 @@
 		methods: {
 			queryBaseSetting() {
 				queryBaseSettingFun().then(res => {
-					console.log('info', res);
 					if (res.data.success) {
 						this.baseInfo = res.data.data;
 						this.baseInfo.is_allow_view_all_order = this.baseInfo.is_allow_view_all_order ? true : false
@@ -115,7 +114,6 @@
 			uploadSuccess(response) {
 				if (response.success) {
 					this.baseInfo.logo = response.data;
-					console.log(this.baseInfo.logo)
 				}
 			}
 		}

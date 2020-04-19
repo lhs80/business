@@ -53,95 +53,105 @@
       </el-form>
     </div>
 
-    <!--选择商品弹框-->
-    <div tabindex="-1" role="dialog" aria-modal="true" aria-label="提示" class="el-message-box__wrapper"
-         style="z-index: 99;" v-show="isShowCommidyList">
-      <div class="el-message-box el-message-box--center" style="width:60%">
-        <div class="bg-grey">
-          <el-row class="prl2">
-            <el-col :span="12" class="h5">数据选择器</el-col>
-            <el-col :span="12" class="text-right h4">
-              <i class="el-message-box__close el-icon-close" @click="isShowCommidyList=false"></i>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="el-message-box__content">
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-select v-model="catId" placeholder="选择商品分类" size="mini" @change="getAllGoods">
-                <el-option key="0" label="全部" value=""></el-option>
-                <el-option
-                  v-for="item in tableData"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="5">
-              <el-input placeholder="请输入关键字" size="mini" v-model="searchKey"></el-input>
-            </el-col>
-            <el-col :span="2">
-              <el-button type="default" @click="getAllGoods" size="mini">搜索</el-button>
-            </el-col>
-          </el-row>
-          <el-table
-            ref="multipleTable"
-            :data="goodList"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column label="商品图片">
-              <template slot-scope="scope"><img :src="scope.row.logo" alt="logo" style="height:60px;"></template>
-            </el-table-column>
-            <el-table-column property="goods_name" label="商品名称"></el-table-column>
-            <el-table-column property="reserve" label="库存"></el-table-column>
-          </el-table>
-        </div>
-        <div class="el-message-box__btns">
-          <button type="button" class="el-button el-button--default el-button--small el-button--primary"
-                  @click="isShowCommidyList=false">
-            <span>关闭</span>
-          </button>
-        </div>
+    <el-dialog :visible="isShowCommidyList" title="数据选择器">
+      <div style="height:500px;overflow-y:auto">
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-select v-model="catId" placeholder="选择商品分类" size="mini" @change="getAllGoods">
+              <el-option key="0" label="全部" value=""></el-option>
+              <el-option
+                v-for="item in tableData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="5">
+            <el-input placeholder="请输入关键字" size="mini" v-model="searchKey"></el-input>
+          </el-col>
+          <el-col :span="2">
+            <el-button type="default" @click="getAllGoods" size="mini">搜索</el-button>
+          </el-col>
+        </el-row>
+        <el-table
+          ref="multipleTable"
+          :data="goodList"
+          tooltip-effect="dark"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection"></el-table-column>
+          <el-table-column label="商品图片">
+            <template slot-scope="scope"><img :src="scope.row.logo" alt="logo" style="height:60px;"></template>
+          </el-table-column>
+          <el-table-column property="goods_name" label="商品名称"></el-table-column>
+          <el-table-column property="reserve" label="库存"></el-table-column>
+        </el-table>
       </div>
-    </div>
-    <div class="v-modal" tabindex="0" style="z-index: 80;" v-if="isShowCommidyList"></div>
-    <!--品牌详情-->
-    <!--<div tabindex="-1" role="dialog" aria-modal="true" aria-label="提示" class="el-message-box__wrapper"-->
-    <!--style="z-index: 99;" v-show="isShowBrandDetail">-->
-    <!--<div class="el-message-box el-message-box&#45;&#45;center" style="width:60%">-->
-    <!--<div class="bg-grey">-->
-    <!--<el-row class="prl2">-->
-    <!--<el-col :span="12" class="h5">品牌详情</el-col>-->
-    <!--<el-col :span="12" class="text-right h4">-->
-    <!--<i class="el-message-box__close el-icon-close" @click="isShowBrandDetail=false"></i>-->
-    <!--</el-col>-->
-    <!--</el-row>-->
-    <!--</div>-->
-    <!--<div class="el-message-box__content">-->
-    <!--<el-form>-->
-    <!--<el-form-item label="品牌名称" v-if="tableData.length">-->
-    <!--{{tableData[curBrandIndex].name}}-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="品牌商品" v-if="tableData.length">-->
-    <!--<span v-if="!tableData[curBrandIndex].goodsArr.length">暂无商品</span>-->
-    <!--<span v-else v-for="(item,index) in tableData[curBrandIndex].goodsArr"-->
-    <!--:key="index">{{item.goods_name}}</span>-->
-    <!--</el-form-item>-->
-    <!--</el-form>-->
-    <!--</div>-->
-    <!--<div class="el-message-box__btns">-->
-    <!--<button type="button" class="el-button el-button&#45;&#45;default el-button&#45;&#45;small el-button&#45;&#45;primary"-->
-    <!--@click="isShowBrandDetail=false">-->
-    <!--<span>关闭</span>-->
-    <!--</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="v-modal" tabindex="0" style="z-index: 80;" v-if="isShowBrandDetail"></div>-->
+      <div slot="footer" class="dialog-footer">
+        <button type="button" class="el-button el-button--default el-button--small el-button--primary"
+                @click="isShowCommidyList=false">
+          <span>关闭</span>
+        </button>
+      </div>
+    </el-dialog>
+    <!--选择商品弹框-->
+    <!--    <div tabindex="-1" role="dialog" aria-modal="true" aria-label="提示" class="el-message-box__wrapper"-->
+    <!--         style="z-index: 99;" v-show="isShowCommidyList">-->
+    <!--      <div class="el-message-box el-message-box&#45;&#45;center" style="width:60%">-->
+    <!--        <div class="bg-grey">-->
+    <!--          <el-row class="prl2">-->
+    <!--            <el-col :span="12" class="h5">数据选择器</el-col>-->
+    <!--            <el-col :span="12" class="text-right h4">-->
+    <!--              <i class="el-message-box__close el-icon-close" @click="isShowCommidyList=false"></i>-->
+    <!--            </el-col>-->
+    <!--          </el-row>-->
+    <!--        </div>-->
+    <!--        <div class="el-message-box__content">-->
+    <!--          <el-row :gutter="20">-->
+    <!--            <el-col :span="6">-->
+    <!--              <el-select v-model="catId" placeholder="选择商品分类" size="mini" @change="getAllGoods">-->
+    <!--                <el-option key="0" label="全部" value=""></el-option>-->
+    <!--                <el-option-->
+    <!--                  v-for="item in tableData"-->
+    <!--                  :key="item.id"-->
+    <!--                  :label="item.name"-->
+    <!--                  :value="item.id"-->
+    <!--                ></el-option>-->
+    <!--              </el-select>-->
+    <!--            </el-col>-->
+    <!--            <el-col :span="5">-->
+    <!--              <el-input placeholder="请输入关键字" size="mini" v-model="searchKey"></el-input>-->
+    <!--            </el-col>-->
+    <!--            <el-col :span="2">-->
+    <!--              <el-button type="default" @click="getAllGoods" size="mini">搜索</el-button>-->
+    <!--            </el-col>-->
+    <!--          </el-row>-->
+    <!--          <el-table-->
+    <!--            ref="multipleTable"-->
+    <!--            :data="goodList"-->
+    <!--            tooltip-effect="dark"-->
+    <!--            style="width: 100%"-->
+    <!--            @selection-change="handleSelectionChange"-->
+    <!--          >-->
+    <!--            <el-table-column type="selection"></el-table-column>-->
+    <!--            <el-table-column label="商品图片">-->
+    <!--              <template slot-scope="scope"><img :src="scope.row.logo" alt="logo" style="height:60px;"></template>-->
+    <!--            </el-table-column>-->
+    <!--            <el-table-column property="goods_name" label="商品名称"></el-table-column>-->
+    <!--            <el-table-column property="reserve" label="库存"></el-table-column>-->
+    <!--          </el-table>-->
+    <!--        </div>-->
+    <!--        <div class="el-message-box__btns">-->
+    <!--          <button type="button" class="el-button el-button&#45;&#45;default el-button&#45;&#45;small el-button&#45;&#45;primary"-->
+    <!--                  @click="isShowCommidyList=false">-->
+    <!--            <span>关闭</span>-->
+    <!--          </button>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <div class="v-modal" tabindex="0" style="z-index: 80;" v-if="isShowCommidyList"></div>-->
   </div>
 </template>
 <script>
@@ -194,7 +204,7 @@
         this.ruleForm = item;
         item.goodsArr.forEach((item, index) => {
           this.selGoodsName += item.goods_name + ",";
-          this.ruleForm.item+=item.goods_id + ",";
+          this.ruleForm.item += item.goods_id + ",";
         });
 
         this.brandListIsShow = false;
@@ -206,7 +216,6 @@
       getAllGoods() {
         let params = `?cat_id=${this.catId}&type=1&searchKey=${this.searchKey}&&pageSize=${this.paginations.page_size}&pageIndex=${this.paginations.page_index}`;
         getGoodsList(params).then(res => {
-          console.log("goodss", res.data.data.data);
           if (res.data.success) {
             this.goodList = res.data.data.data;
             this.paginations.page_count = res.data.data.pageinfo.totalpage;
@@ -221,7 +230,6 @@
         getBrand().then(res => {
           if (res.data.success)
             this.tableData = res.data.data;
-          console.log("type", this.tableData);
         });
       },
       addBrand() {
@@ -237,7 +245,6 @@
               item: this.ruleForm.item,
             };
             addBrand(params).then(res => {
-              console.log("add", res);
               if (res.data.success) {
                 this.getData();
                 this.$message({
@@ -248,7 +255,6 @@
               }
             })
           } else {
-            console.log("error submit!!");
             return false;
           }
         });
@@ -262,7 +268,6 @@
               item: this.ruleForm.item,
             };
             editBrand(params).then(res => {
-              console.log("add", res);
               if (res.data.success) {
                 this.getData();
                 this.$message({
@@ -273,7 +278,6 @@
               }
             })
           } else {
-            console.log("error submit!!");
             return false;
           }
         });
@@ -292,7 +296,7 @@
       backBrandList() {
         this.brandListIsShow = true;
         this.addBrandIsShow = false;
-        this.ruleForm={
+        this.ruleForm = {
           id: "",
           name: "",
           item: [],//选择的商品ID
@@ -312,5 +316,12 @@
     }
   };
 </script>
-<style>
+<style scoped lang="scss">
+  .el-message-box__wrapper {
+    height: 500px;
+    overflow: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
 </style>

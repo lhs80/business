@@ -115,7 +115,6 @@
         this.$refs[formName].validate(valid => {
           if (valid) {
             addAddressListFun(this.addressInfo).then(res => {
-              console.log(res);
               if (res.data.success) {
                 this.$message({
                   showClose: true,

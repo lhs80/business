@@ -238,7 +238,10 @@ const urlCol = {
 		},
 		updateClientLevel: {
 			url: '/mch/customer/updateMchCustomer'
-		}
+		},
+		searchClient: {
+			url: '/mch/report/getUserByAddress'
+		},
 	},
 
 	/**
