@@ -15,7 +15,7 @@
         auto-complete="off"
         placeholder="请输入用户名"
       >
-        <i slot="prefix" class="icon-yonghu"></i>
+        <i slot="prefix" class="iconfont  icon-yonghu"></i>
       </el-input>
     </el-form-item>
     <el-form-item prop="pwd">
@@ -28,7 +28,7 @@
         placeholder="请输入密码"
       >
         <i class="el-icon-view el-input__icon" slot="suffix" @click="showPassword"></i>
-        <i slot="prefix" class="icon-mima"></i>
+        <i slot="prefix" class="iconfont icon-suo"></i>
       </el-input>
     </el-form-item>
     <el-form-item>
