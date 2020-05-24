@@ -47,6 +47,7 @@
             </div>
             <div style="display:inline-block;">
               <el-button type="primary" size="small" @click="getMyCustomerList()">搜索</el-button>
+              <el-button size="small" @click="firstReset">重置</el-button>
             </div>
           </el-col>
         </el-row>
@@ -134,6 +135,7 @@
             </div>
             <div style="display:inline-block;">
               <el-button type="primary" size="small" @click="getDoneCustomerList">搜索</el-button>
+              <el-button size="small" @click="secondReset()">重置</el-button>
             </div>
           </el-col>
         </el-row>
@@ -194,6 +196,15 @@
           </el-row>
         </div>
         <hr>
+        <div class="text-right">
+          <div style="width:150px;display:inline-block;">
+            <el-input size="small" v-model="searchAllParams.searchKey" placeholder="请输入客户姓名/手机号"></el-input>
+          </div>
+          <div style="display:inline-block;">
+            <el-button type="primary" size="small" @click="getThirdCustomerList()">搜索</el-button>
+            <el-button size="small" @click="thirdReset">重置</el-button>
+          </div>
+        </div>
         <el-table :data="thirdCustomerList"
                   style="width: 100%"
                   @selection-change="doneSelectionChange"
@@ -298,9 +309,6 @@
         <el-form-item label="微信" style="margin-bottom:15px">
           <el-input size="small" placeholder="请输入微信号" v-model="customerInfo.wechat" autocomplete="off"></el-input>
         </el-form-item>
-        <!--        <el-form-item label="性格" style="margin-bottom:15px">-->
-        <!--          <el-input size="small" placeholder="请输入客户性格" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
-        <!--        </el-form-item>-->
         <el-form-item label="类型" prop="type" style="margin-bottom:15px">
           <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
             <el-option value="A" label="A"/>
@@ -445,9 +453,6 @@
         <el-form-item label="微信" style="margin-bottom:15px">
           <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>
         </el-form-item>
-        <!--        <el-form-item label="性格" style="margin-bottom:15px">-->
-        <!--          <el-input size="small" v-model="customerInfo.wechat" autocomplete="off"></el-input>-->
-        <!--        </el-form-item>-->
         <el-form-item label="类型" prop="type" style="margin-bottom:15px">
           <el-select size="small" v-model="customerInfo.type" placeholder="请选择">
             <el-option value="代理" label="代理" v-if="activeName==='second'"/>
@@ -688,26 +693,23 @@
       }
     },
     watch: {
-      searchMyParams: {
+      'searchMyParams.brand_id': {
         handler() {
           this.myPaginations.page_index = 1;
           this.getMyCustomerList();
-        },
-        deep: true,
+        }
       },
-      searchDoneParams: {
+      'searchDoneParams.brand_id': {
         handler() {
           this.donePaginations.page_index = 1;
           this.getDoneCustomerList();
-        },
-        deep: true,
+        }
       },
-      searchAllParams: {
+      'searchAllParams.brand_id': {
         handler() {
           this.thirdCustomerPaginations.page_index = 1;
           this.getThirdCustomerList();
-        },
-        deep: true,
+        }
       }
     },
     mounted() {
@@ -788,7 +790,7 @@
         };
         addFollowRecordFun(params).then(res => {
           if (res.data.success) {
-            this.isAdd=false;
+            this.isAdd = false;
             this.showFollowRecord = '';
             this.followRecordInfo = {};
             this.$message({
@@ -800,8 +802,8 @@
             this.getThirdCustomerList();
             this.getDoneCustomerList();
             this.getMyCustomerList();
-          }else{
-            this.isAdd=false;
+          } else {
+            this.isAdd = false;
             this.$message.error(res.data.msg)
           }
         })
@@ -1007,6 +1009,29 @@
         this.$refs['customerEditForm'].resetFields();
         this.$refs['customerForm'].resetFields();
       },
+      firstReset() {
+        this.searchMyParams = {
+          type: '',
+          brand_id: '',
+          searchKey: ''
+        };
+        this.getMyCustomerList();
+      },
+      secondReset() {
+        this.searchDoneParams = {
+          type: '',
+          brand_id: '',
+          searchKey: ''
+        };
+        this.getDoneCustomerList();
+      },
+      thirdReset() {
+        this.searchAllParams = {
+          brand_id: '',
+          searchKey: ''
+        };
+        this.getThirdCustomerList();
+      }
     }
   }
 </script>

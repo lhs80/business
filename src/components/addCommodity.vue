@@ -165,7 +165,7 @@
         ruleForm: {
           name: "",// 零售价格
           lsjg: "",
-          region: false,
+          region: '',
           sort: "",
           type: "",// 商品分类
           yunfeiRadio: "0",// 运费选项
@@ -218,7 +218,6 @@
        */
       getAllBrand() {
         getBrand().then(res => {
-          console.log(res);
           if (res.data.success)
             this.brandList = res.data.data;
         });
@@ -228,7 +227,6 @@
        */
       getAllGoodsType() {
         getGoodsCat().then(res => {
-          console.log(res);
           if (res.data.success)
             this.goodTypes = res.data.data;
         });
@@ -265,7 +263,6 @@
       },
       // 删除规格项
       deleteGgx(ee) {
-        console.log(ee);
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
@@ -275,10 +272,8 @@
       },
       // 下面是图片上传事件
       handleRemove(file, fileList) {
-        // console.log(file, fileList);
       },
       handlePreview(file) {
-        // console.log(file);
       },
       handleExceed(files, fileList) {
         // this.$message.warning(
@@ -300,7 +295,6 @@
       uploadSuccess(response) {
         if (response.success) {
           this.goodImages.push(response.data);
-          console.log("goodImages", this.goodImages);
         }
       }
     }

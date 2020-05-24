@@ -62,7 +62,7 @@
           <el-table-column property="spend_count" label="收货地址">
             <template slot-scope="scope">
               <div :class="index>0?'mt1':''" v-for="(address,index) in scope.row.addressList" :key="index">
-                <span>{{address.province}}{{address.city}}{{address.county}}</span>
+                <span>{{address.province}}{{address.city}}{{address.country}}</span>
                 <span class="prl1">{{address.address}}</span>
                 <span>{{address.pname}}</span>
                 <span class="prl1">{{address.phone}}</span>

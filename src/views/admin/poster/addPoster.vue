@@ -28,7 +28,7 @@
       <el-form-item label="选择图片" prop="logo">
         <el-upload
           class="upload-demo"
-          action="http://sht.qicheen.com/file_upload"
+          action="http://m.gongjiangsht.com/file_upload"
           :data="imgType"
           list-type="picture"
           :on-success="uploadSuccess"

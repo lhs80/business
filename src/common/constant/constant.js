@@ -14,16 +14,16 @@ const iconfontVersion = [
 ];
 const iconfontUrl = `//at.alicdn.com/t/font_$key.css`;
 const codeUrl = `/admin/code`;
-let baseURL = "http://sht.qicheen.com";
+let baseURL = "http://m.gongjiangsht.com";
 
 
 const NODE_ENV = process.env.NODE_ENV;
 // 测试环境
-if (NODE_ENV == "testing") baseURL = "http://sht.qicheen.com";
+if (NODE_ENV == "testing") baseURL = "http://m.gongjiangsht.com";
 // 开发环境
-else if (NODE_ENV == "development") baseURL = "http://sht.qicheen.com";
+else if (NODE_ENV == "development") baseURL = "http://m.gongjiangsht.com";
 // 生产环境
 // else if (NODE_ENV == "production") rootUrl = "http://60.205.216.103:9080";
-else if (NODE_ENV == "production") baseURL = "http://sht.qicheen.com";
+else if (NODE_ENV == "production") baseURL = "http://m.gongjiangsht.com";
 
 export { iconfontUrl, iconfontVersion, codeUrl, baseURL };

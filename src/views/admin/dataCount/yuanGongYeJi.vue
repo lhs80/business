@@ -31,7 +31,7 @@
           <h6 class="sortNum" :class="{'topFlag':scope.$index<=3}">{{scope.$index+1}}</h6>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="业务员姓名"></el-table-column>
+      <el-table-column prop="real_name" label="业务员姓名"></el-table-column>
       <el-table-column prop="phone" label="手机号"></el-table-column>
       <el-table-column prop="c" label="订单数"></el-table-column>
       <el-table-column prop="total" label="业绩金额"></el-table-column>

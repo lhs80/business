@@ -130,7 +130,7 @@
             <el-input v-model="goodInfo.reserve" placeholder="商品的剩余数量, 如启用多规格，则此处设置无效" :disabled="goodInfo.is_norm||goodInfo.is_norm==1"></el-input>
           </el-form-item>
           <el-form-item label="规格">
-            <el-checkbox v-model="goodInfo.is_norm||goodInfo.is_norm==1">启用商品规格</el-checkbox>
+            <el-checkbox v-model="goodInfo.is_norm">启用商品规格</el-checkbox>
             <h6 class="text-muted ">启用商品规格后，商品的价格及库存以商品规格为准,库存设置为0则会到”已售罄“中，手机也不会显示, -1为不限制</h6>
             <!-- 添加商品规格 -->
             <div v-show="goodInfo.is_norm">
@@ -373,7 +373,6 @@
        */
       getAllExpressTemp() {
         getAllExpressTempFun().then(res => {
-          console.log("yunfei", res)
           if (res.data.success)
             this.postModuleList = res.data.data;
         })
@@ -383,7 +382,6 @@
        */
       getAllBrand() {
         getBrand().then(res => {
-          console.log(res);
           if (res.data.success)
             this.brandList = res.data.data;
         });
@@ -393,7 +391,6 @@
        */
       getAllGoodsType() {
         getGoodsCat().then(res => {
-          console.log(res);
           if (res.data.success)
             this.goodTypes = res.data.data;
         });
@@ -407,7 +404,6 @@
             this.goodInfo.is_norm = this.goodInfo.is_norm ? 1 : 0;
             this.goodInfo.pics = JSON.stringify(this.goodInfo.pics);
             addGoods(this.goodInfo).then(res => {
-              console.log("submit", res)
               if (res.data.success) {
                 this.$message({
                   showClose: true,
@@ -437,7 +433,6 @@
        * 删除规格项
        */
       deleteGgx(ee) {
-        console.log(ee);
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
@@ -449,7 +444,6 @@
        * 上传图片成功
        */
       uploadSuccess(response) {
-        console.log(response);
         if (response.success) {
           this.goodInfo.pics.push(response.data);
         }
@@ -529,13 +523,11 @@
         }
       },
       handleRemove(file, fileList) {
-        console.log(file, fileList);
       },
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
       handlePreview(file) {
-        console.log(file);
       },
       /**
        * 刷新规格列表
@@ -592,7 +584,6 @@
             dlprice: 0,
           })
         }
-        console.log("skuArr", this.goodInfo.skuArr)
       },
       addNewType(heads, choices) {
         let result = [];
@@ -611,7 +602,6 @@
             result.push(params);
           }
         }
-        console.log("result", result)
         return result;
       },
       onModelInput() {
@@ -629,7 +619,6 @@
         let quill = this.$refs.QuillEditor.quill;
         // 如果上传成功
         if (res) {
-          console.log("upload", res);
           // 获取光标所在位置
           let length = quill.getSelection().index;
           // 插入图片，res为服务器返回的图片链接地址

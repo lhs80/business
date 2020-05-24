@@ -4,7 +4,7 @@
             <el-tab-pane label="团队报表" name="first">
                 <div class="text-right">
                     <el-button size="small" type="primary">
-                        <a href="http://sht.qicheen.com/mch/salesman/getFollowReportGroupExport"
+                        <a href="http://m.gongjiangsht.com/mch/salesman/getFollowReportGroupExport"
                            target="_blank"
                         >
                             导出报表
@@ -39,7 +39,7 @@
                     </div>
                     <el-button size="small" type="primary" @click="businessReport">搜索</el-button>
                     <el-button size="small" type="primary">
-                        <a :href="`http://sht.qicheen.com/mch/salesman/getFollowReportExport?group_id=${searchParams.group_id || ''}&searchKey=${searchParams.searchKey || ''}`"
+                        <a :href="`http://m.gongjiangsht.com/mch/salesman/getFollowReportExport?group_id=${searchParams.group_id || ''}&searchKey=${searchParams.searchKey || ''}`"
                            target="_blank"
                         >
                             导出报表

@@ -13,13 +13,13 @@ import urlCol from '@/common/urlCol'
 import 'nprogress/nprogress.css'
 // progress bar style
 // 超时时间
-axios.defaults.timeout = 30000000
+axios.defaults.timeout = 300000000000
 
 // 跨域请求，允许保存cookie
 axios.defaults.withCredentials = true
 
 // axios.defaults.baseURL = "/api";
-axios.defaults.baseURL = 'http://sht.qicheen.com'
+axios.defaults.baseURL = 'http://m.gongjiangsht.com'
 
 NProgress.configure({
   showSpinner: false

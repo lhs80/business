@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // 配置默认的host,假如你的API host是：http://api.htmlx.club
 // axios.defaults.baseURL = 'http://10.16.30.38:8012/'
-axios.defaults.baseURL = 'http://sht.qicheen.com'
+axios.defaults.baseURL = 'http://m.gongjiangsht.com'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 // 添加请求拦截器

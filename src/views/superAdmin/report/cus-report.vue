@@ -26,8 +26,9 @@
       <label class="h6">是否代理：</label>
       <div style="width:200px;display:inline-block">
         <el-select v-model="searchParams.type" size="small" placeholder="是否代理">
-          <el-option value="0" label="代理"></el-option>
-          <el-option value="1" label="S"></el-option>
+          <el-option value="" label="全部"></el-option>
+          <el-option value="代理" label="代理"></el-option>
+          <el-option value="S" label="S"></el-option>
         </el-select>
       </div>
       <div style="width:200px;display:inline-block">
@@ -35,8 +36,9 @@
       </div>
       <el-button size="small" type="primary" @click="businessReport">搜索</el-button>
       <el-button size="small" type="primary">
-        <a :href="`http://sht.qicheen.com/mch/salesman/getCustomerReportExport?group_id=${searchParams.group_id || ''}&searchKey=${searchParams.searchKey || ''}&salesManId=${searchParams.salesManId || ''}&type=${searchParams.type || ''}&brand_id=${searchParams.brand_id || ''}`"
-           target="_blank"
+        <a
+          :href="`http://m.gongjiangsht.com/mch/salesman/getCustomerReportExport?group_id=${searchParams.group_id || ''}&searchKey=${searchParams.searchKey || ''}&salesManId=${searchParams.salesManId || ''}&type=${searchParams.type || ''}&brand_id=${searchParams.brand_id || ''}`"
+          target="_blank"
         >
           导出报表
         </a>
@@ -115,6 +117,15 @@
           layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
         },
       }
+    },
+    watch: {
+      searchParams: {
+        handler() {
+          this.paginations.page_index = 1;
+          this.businessReport();
+        },
+        deep: true,
+      },
     },
     mounted() {
       this.getAllTeams();
