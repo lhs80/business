@@ -589,7 +589,7 @@
         <el-option
           v-for="(item,index) in employeeList"
           :key="index"
-          :label="item.name"
+          :label="item.real_name"
           :value="item.id">
         </el-option>
       </el-select>

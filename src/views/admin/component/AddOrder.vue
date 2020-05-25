@@ -2,7 +2,7 @@
     <!--添加订单-->
     <el-dialog title="添加订单" :visible="show" top="5vh" :show-close="false" width="800px" custom-class="add-order-dialog">
         <el-row :gutter="40">
-            <el-col :span="12">
+            <el-col :span="10">
                 <h3>选择商品</h3>
                 <hr>
                 <div class="mt2">
@@ -72,12 +72,12 @@
                     <el-button type="primary" size="large" @click="addToCart">添加到进货单</el-button>
                 </div>
             </el-col>
-            <el-col :span="12" style="border-left:solid 1px #f0f0f0">
+            <el-col :span="14" style="border-left:solid 1px #f0f0f0">
                 <h3>订单详情</h3>
                 <hr>
                 <div class="cart-detail mt2">
                     <el-table :data="resultProduct" size="small" stripe style="width: 100%">
-                        <el-table-column prop="brandName" label="品牌"></el-table-column>
+                        <el-table-column prop="brandName" label="品牌"/>
                         <el-table-column prop="productName" label="商品名称"></el-table-column>
                         <el-table-column label="规格数量">
                             <template slot-scope="scope">
@@ -153,8 +153,8 @@
             </el-col>
         </el-row>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="close">取消</el-button>
-            <el-button type="primary" @click="saveOrder()">保存</el-button>
+            <el-button size="small" @click="close">取消</el-button>
+            <el-button size="small" type="primary" @click="saveOrder()">保存</el-button>
         </div>
     </el-dialog>
 </template>

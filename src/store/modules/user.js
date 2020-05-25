@@ -367,7 +367,7 @@ const user = {
               url: '',
               spread: false,
               path: 'followsList',
-              component: 'views/superAdmin/open/list',
+              component: 'views/admin/open/list',
               authority: null,
               redirect: null,
               code: null,
