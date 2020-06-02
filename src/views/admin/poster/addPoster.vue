@@ -16,7 +16,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="选择商品" prop="selGoodsName">
-        <el-input v-model="selGoodsName" placeholder="请输入内容">
+        <el-input v-model="selGoodsName" placeholder="请输入内容" :disabled="true">
           <el-button slot="append" type="primary" @click="isShowCommidyList=true">选择商品</el-button>
         </el-input>
         <ul class="mt2">
@@ -43,72 +43,55 @@
       </el-form-item>
     </el-form>
     <!--选择商品弹框-->
-    <div tabindex="-1" role="dialog" aria-modal="true" aria-label="提示" class="el-message-box__wrapper"
-         style="z-index: 99;" v-show="isShowCommidyList">
-      <div class="el-message-box el-message-box--center" style="width:60%">
-        <div class="bg-grey">
-          <el-row class="prl2">
-            <el-col :span="12" class="h5">数据选择器</el-col>
-            <el-col :span="12" class="text-right h4">
-              <i class="el-message-box__close el-icon-close" @click="isShowCommidyList=false"></i>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="el-message-box__content">
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-select v-model="catId" placeholder="选择商品分类" size="mini" @change="getAllGoods">
-                <el-option key="0" label="全部" value=""></el-option>
-                <el-option
-                  v-for="item in brandList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="5">
-              <el-input placeholder="请输入关键字" size="mini" v-model="searchKey"></el-input>
-            </el-col>
-            <el-col :span="2">
-              <el-button type="default" @click="getAllGoods" size="mini">搜索</el-button>
-            </el-col>
-          </el-row>
-          <el-table
-            ref="goodList"
-            :data="goodList"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @select="handleSelectionChange"
-          >
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column label="商品图片">
-              <template slot-scope="scope"><img :src="scope.row.logo" alt="logo" style="height:60px;"></template>
-            </el-table-column>
-            <el-table-column property="goods_name" label="商品名称"></el-table-column>
-            <el-table-column property="reserve" label="库存"></el-table-column>
-          </el-table>
-          <el-pagination
-            v-if="paginations.total > 0"
-            :page-sizes="paginations.pageSizes"
-            :page-size="paginations.page_size"
-            :layout="paginations.layout"
-            :total="paginations.total"
-            :current-page="paginations.page_index"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-            class="mt2 text-right"
-          ></el-pagination>
-        </div>
-        <div class="el-message-box__btns">
-          <button type="button" class="el-button el-button--default el-button--small el-button--primary"
-                  @click="isShowCommidyList=false">
-            <span>关闭</span>
-          </button>
-        </div>
+    <el-dialog :visible="isShowCommidyList" title="数据选择器" :fullscreen="true">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-select v-model="catId" placeholder="选择商品分类" size="mini" @change="getAllGoods">
+            <el-option key="0" label="全部" value=""/>
+            <el-option
+              v-for="item in brandList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="5">
+          <el-input placeholder="请输入关键字" size="mini" v-model="searchKey"></el-input>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary" @click="getAllGoods" size="mini">搜索</el-button>
+        </el-col>
+      </el-row>
+      <el-table
+        ref="goodList"
+        :data="goodList"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @select="handleSelectionChange"
+      >
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column label="商品图片">
+          <template slot-scope="scope"><img :src="scope.row.logo" alt="logo" style="height:60px;"></template>
+        </el-table-column>
+        <el-table-column property="goods_name" label="商品名称"></el-table-column>
+        <el-table-column property="reserve" label="库存"></el-table-column>
+      </el-table>
+      <el-pagination
+        v-if="paginations.total > 0"
+        :page-sizes="paginations.pageSizes"
+        :page-size="paginations.page_size"
+        :layout="paginations.layout"
+        :total="paginations.total"
+        :current-page="paginations.page_index"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+        class="mt2 text-right"
+      />
+      <div slot="footer">
+        <el-button type="primary" size="small" @click="closeSelGood">关闭</el-button>
       </div>
-    </div>
-    <div class="v-modal" tabindex="0" style="z-index: 80;" v-if="isShowCommidyList"></div>
+    </el-dialog>
   </section>
 </template>
 <script>
@@ -208,7 +191,11 @@
       submitForm(formName) {
         this.$refs[formName].validate(valid => {
           if (valid) {
-            addPostFun(this.postInfo).then(res => {
+            let params = {
+              ...this.postInfo,
+              goods: this.multipleSelection
+            }
+            addPostFun(params).then(res => {
               if (res.data.success) {
                 this.$message({
                   showClose: true,
@@ -227,21 +214,15 @@
       /**
        * 选择的商品
        */
-      handleSelectionChange(select, val) {
-        // if (!select) return false;
-        // this.selGoodsName += val.goods_name + ";";
-        // this.postInfo.goods.push(val);
-        // this.multipleSelection.push(val);
-        // console.log("items", this.multipleSelection)
-        if (select.indexOf(val) >= 0) {
-          this.selGoodsName += val.goods_name + ' '
-          this.postInfo.goods.push(val)
-          this.multipleSelection.push(val)
-        } else {
-          this.selGoodsName=this.selGoodsName.replace(val.goods_name, ' ')
-          this.postInfo.goods.splice(this.postInfo.goods.findIndex(item => item.id === val.goods_id), 1)
-          this.multipleSelection.splice(this.multipleSelection.findIndex(item => item.id === val.goods_id), 1)
-        }
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      closeSelGood() {
+        this.isShowCommidyList = false;
+        this.selGoodsName = '';
+        this.multipleSelection.forEach(item => {
+          this.selGoodsName += item.goods_name + ' '
+        })
       },
       // 每页多少条切换
       handleSizeChange(page_size) {

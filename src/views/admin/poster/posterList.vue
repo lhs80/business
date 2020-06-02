@@ -47,7 +47,7 @@
           page_index: 1, // 当前位于哪页
           total: 0, // 总条数`
           page_count: 0,//总页数
-          page_size: 5, // 1页显示多少条
+          page_size: 20, // 1页显示多少条
           pageSizes: [5, 10, 15, 20], //每页显示多少条
           layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
         }
