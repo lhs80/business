@@ -11,7 +11,7 @@
         <el-input v-model="postInfo.posterName"></el-input>
       </el-form-item>
       <el-form-item label="海报类型">
-        <el-checkbox-group v-model="postInfo.type" @change="typeChange">
+        <el-checkbox-group v-model="postInfo.type">
           <el-checkbox v-for="(item,index) in postTypeList" :label="item.id" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -43,61 +43,15 @@
       </el-form-item>
     </el-form>
     <!--选择商品弹框-->
-    <el-dialog :visible="isShowCommidyList" title="数据选择器" :fullscreen="true">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-select v-model="catId" placeholder="选择商品分类" size="mini" @change="getAllGoods">
-            <el-option key="0" label="全部" value=""/>
-            <el-option
-              v-for="item in brandList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-col>
-        <el-col :span="5">
-          <el-input placeholder="请输入关键字" size="mini" v-model="searchKey"></el-input>
-        </el-col>
-        <el-col :span="2">
-          <el-button type="primary" @click="getAllGoods" size="mini">搜索</el-button>
-        </el-col>
-      </el-row>
-      <el-table
-        ref="goodList"
-        :data="goodList"
-        tooltip-effect="dark"
-        style="width: 100%"
-        @select="handleSelectionChange"
-      >
-        <el-table-column type="selection"></el-table-column>
-        <el-table-column label="商品图片">
-          <template slot-scope="scope"><img :src="scope.row.logo" alt="logo" style="height:60px;"></template>
-        </el-table-column>
-        <el-table-column property="goods_name" label="商品名称"></el-table-column>
-        <el-table-column property="reserve" label="库存"></el-table-column>
-      </el-table>
-      <el-pagination
-        v-if="paginations.total > 0"
-        :page-sizes="paginations.pageSizes"
-        :page-size="paginations.page_size"
-        :layout="paginations.layout"
-        :total="paginations.total"
-        :current-page="paginations.page_index"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-        class="mt2 text-right"
-      />
-      <div slot="footer">
-        <el-button type="primary" size="small" @click="closeSelGood">关闭</el-button>
-      </div>
-    </el-dialog>
+    <SelectGoodDlg :show="isShowCommidyList" :selectList="multipleSelection" @close="close"/>
   </section>
 </template>
 <script>
   import {getGoodsList, getBrand, addPostFun} from "@/api/activity"
+  import SelectGoodDlg from "./components/SelectGoodDlg";
 
   export default {
+    components: {SelectGoodDlg},
     data() {
       return {
         imgType: {type: "merchant"},
@@ -119,25 +73,9 @@
             {required: true, message: "请输入活动名称", trigger: "blur"},
             {min: 3, max: 5, message: "长度在 3 到 8 个字符", trigger: "blur"}
           ],
-          goods: [
-            {
-              type: "array",
-              required: true,
-              message: "请至少选择一个商品",
-              trigger: "change"
-            }
-          ],
-          type: [
-            {
-              type: "array",
-              required: true,
-              message: "请至少选择一个活动性质",
-              trigger: "change"
-            }
-          ],
-          logo: [
-            {required: true, message: "请选择海报图片", trigger: "blur"}
-          ],
+          goods: [{required: true, message: "请至少选择一个商品",}],
+          type: [{required: true, message: "请至少选择一个活动性质",}],
+          logo: [{required: true, message: "请选择海报图片"}],
         },
         // 选择的商品
         multipleSelection: [],
@@ -151,50 +89,14 @@
         },
       };
     },
-    mounted() {
-      this.getAllGoods();
-      this.getData();
-    },
     methods: {
-      /**
-       * 所有商品
-       */
-      getAllGoods() {
-        let params = {
-          cat_id: this.catId,
-          type: 1,
-          searchKey: this.searchKey,
-          pageSize: this.paginations.page_size,
-          pageIndex: this.paginations.page_index,
-        };
-        getGoodsList(params).then(res => {
-          if (res.data.success) {
-            this.goodList = res.data.data.data;
-            this.paginations.page_count = res.data.data.pageinfo.totalpage;
-            this.paginations.total = res.data.data.pageinfo.count;
-            if (this.multipleSelection.length) {
-              this.toggleSelection(this.multipleSelection)
-            }
-          }
-        });
-      },
-      /**
-       * 所有品牌
-       */
-      getData() {
-        getBrand().then(res => {
-          if (res.data.success)
-            this.brandList = res.data.data;
-          console.log("type", this.brandList);
-        });
-      },
       submitForm(formName) {
         this.$refs[formName].validate(valid => {
           if (valid) {
             let params = {
               ...this.postInfo,
               goods: this.multipleSelection
-            }
+            };
             addPostFun(params).then(res => {
               if (res.data.success) {
                 this.$message({
@@ -211,44 +113,13 @@
           }
         });
       },
-      /**
-       * 选择的商品
-       */
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
-      closeSelGood() {
+      close(items) {
         this.isShowCommidyList = false;
         this.selGoodsName = '';
+        this.multipleSelection = items;
         this.multipleSelection.forEach(item => {
           this.selGoodsName += item.goods_name + ' '
         })
-      },
-      // 每页多少条切换
-      handleSizeChange(page_size) {
-        this.paginations.page_size = page_size;
-        this.getAllGoods()
-      },
-      // 上下分页
-      handleCurrentChange(page) {
-        this.paginations.page_index = page;
-        this.getAllGoods();
-      },
-      // 选中table已有数据
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.goodList.forEach((item, index) => {
-              if (item.goods_id == row.goods_id) {
-                this.$nextTick(() => {
-                  this.$refs.goodList.toggleRowSelection(this.goodList[index])
-                })
-              }
-            });
-          })
-        } else {
-          this.$refs.goodList.clearSelection()
-        }
       },
       /**
        * 上传图片成功后给数据赋值
@@ -258,9 +129,6 @@
           this.postInfo.logo = response.data
         }
       },
-      typeChange(value) {
-        console.log(value)
-      }
     }
   };
 </script>

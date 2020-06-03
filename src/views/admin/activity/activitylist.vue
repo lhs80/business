@@ -20,12 +20,12 @@
             <el-form-item label="业务员是否可以查看公司全部订单">
                 <el-switch v-model="baseInfo.is_allow_view_all_order" active-text="开启" inactive-text="关闭"></el-switch>
             </el-form-item>
-            <el-form-item label="下单几天后">
+            <el-form-item label="下单">
                 <el-row>
                     <el-col :span="4">
                         <el-input-number v-model="baseInfo.ac_order_day"></el-input-number>
                     </el-col>
-                    <el-col :span="20"><span class="prl1 text-muted"> 天，自动关闭未付款订单。</span></el-col>
+                    <el-col :span="20"><span class="prl1 text-muted"> 分钟，自动关闭未付款订单。</span></el-col>
                 </el-row>
             </el-form-item>
             <el-form-item label="收货几天后">
