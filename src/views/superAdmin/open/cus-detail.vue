@@ -1,6 +1,6 @@
 <template>
   <section class="p2">
-    <el-row v-if="$route.query.type===2">
+    <el-row v-if="type==='2'">
       <el-col :span="12">
         <div>客户姓名：{{customInfo.name}} 跟进人：{{customInfo.follows_names}}</div>
       </el-col>
@@ -11,7 +11,7 @@
       </el-col>
     </el-row>
     <el-tabs v-model="activeName">
-      <el-tab-pane v-if="type===2" label="跟进动态" name="first">
+      <el-tab-pane v-if="type==='2'" label="跟进动态" name="first">
         <div class="text-right prl2">
           <el-button size="small" type="primary" @click="showFollowRecord=true">写跟进</el-button>
         </div>
@@ -40,8 +40,19 @@
         <div v-else class="text-center">
           暂无数据
         </div>
+        <div class="mt2 text-right">
+          <el-pagination
+            :page-sizes="follow_pageinfo.pageSizes"
+            :page-size="follow_pageinfo.page_size"
+            :layout="follow_pageinfo.layout"
+            :total="follow_pageinfo.total"
+            :current-page="follow_pageinfo.page_index"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          />
+        </div>
       </el-tab-pane>
-      <el-tab-pane v-if="type===2" label="基本资料" name="second">
+      <el-tab-pane v-if="type==='2'" label="基本资料" name="second">
         <ul>
           <li>姓名：{{customInfo.name}}</li>
           <li>电话：{{customInfo.phone}}</li>
@@ -58,8 +69,8 @@
           </li>
         </ul>
       </el-tab-pane>
-      <el-tab-pane v-if="type===2" label="客户订单" name="third">
-        <el-table :data="orderList" stripe style="width: 100%">
+      <el-tab-pane v-if="type==='2'" label="客户订单" name="third">
+        <el-table :data="orderList" stripe>
           <el-table-column label="商品名称">
             <template slot-scope="scope">
               <el-row v-for="(goodItem,goodIndex) in scope.row.goods" :key="goodIndex">
@@ -85,8 +96,19 @@
           </el-table-column>
           <el-table-column prop="salessman_name" label="业务所属"></el-table-column>
         </el-table>
+        <div class="mt2 text-right">
+          <el-pagination
+            :page-sizes="order_pageinfo.pageSizes"
+            :page-size="order_pageinfo.page_size"
+            :layout="order_pageinfo.layout"
+            :total="order_pageinfo.total"
+            :current-page="order_pageinfo.page_index"
+            @current-change="orderCurrentChange"
+            @size-change="orderSizeChange"
+          />
+        </div>
       </el-tab-pane>
-      <el-tab-pane v-if="type===2" label="客户交易" name="fourth">
+      <el-tab-pane v-if="type==='2'" label="客户交易" name="fourth">
         <el-card style="width:60%;margin:0 auto" class="mt2" shadow="never">
           <div slot="header" class="text-center">
             <span>我的业绩</span>
@@ -276,10 +298,26 @@
           pageSizes: [5, 10, 15, 20], //每页显示多少条
           layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
         },
+        follow_pageinfo: {
+          page_index: 1, // 当前位于哪页
+          total: 0, // 总条数`
+          page_count: 0,//总页数
+          page_size: 15, // 1页显示多少条
+          pageSizes: [5, 10, 15, 20], //每页显示多少条
+          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
+        },
+        order_pageinfo: {
+          page_index: 1, // 当前位于哪页
+          total: 0, // 总条数`
+          page_count: 0,//总页数
+          page_size: 15, // 1页显示多少条
+          pageSizes: [5, 10, 15, 20], //每页显示多少条
+          layout: 'total, sizes, prev, pager, next, jumper' // 翻页属性
+        },
       }
     },
     mounted() {
-      if (this.$route.query.type === 2) {
+      if (this.type === '2') {
         this.getCusDetail()
         this.getCusOrderList()
         this.getCusTrandList()
@@ -323,7 +361,7 @@
         }
         queryCustomOrderListFun(params).then(res => {
           if (res.data.success) {
-            this.orderList = res.data.data.data
+            this.orderList = res.data.data.data;
           }
         })
       },
@@ -331,12 +369,13 @@
       getCusTrandList() {
         let params = {
           id: this.cusId,
-          pageIndex: 1,
-          pageSize: 15
+          pageIndex: this.order_pageinfo.page_index,
+          pageSize: this.order_pageinfo.page_size,
         }
         queryCustomerTrandFun(params).then(res => {
           if (res.data.success) {
-            this.trandInfo = res.data.data
+            this.trandInfo = res.data.data;
+            this.order_pageinfo.total = res.data.data.pageinfo.count
           }
         })
       },
@@ -344,12 +383,13 @@
       getCusTrendList() {
         let params = {
           id: this.cusId,
-          pageIndex: 1,
-          pageSize: 15
+          pageIndex: this.follow_pageinfo.page_index,
+          pageSize: this.follow_pageinfo.page_size,
         }
         queryCustomerTrendsFun(params).then(res => {
           if (res.data.success) {
-            this.trendList = res.data.data.data
+            this.trendList = res.data.data.data;
+            this.follow_pageinfo.total = res.data.data.pageinfo.count
           }
         })
       },
@@ -408,7 +448,7 @@
               showClose: true,
               message: `操作完成!`,
               type: 'success'
-            })
+            });
             this.getCusDetail()
           }
         })
@@ -442,6 +482,26 @@
       handleSizeChange(page_size) {
         this.paginations.page_size = page_size
         this.getAllBusiness()
+      },
+      // 跟进动态上下分页
+      handleCurrentChange(page) {
+        this.follow_pageinfo.page_index = page
+        this.getCusTrendList()
+      },
+      // 跟进动态每页多少条切换
+      handleSizeChange(page_size) {
+        this.follow_pageinfo.page_size = page_size
+        this.getCusTrendList()
+      },
+      // 客户订单上下分页
+      orderCurrentChange(page) {
+        this.order_pageinfo.page_index = page
+        this.getCusTrandList()
+      },
+      // 客户订单多少条切换
+      orderSizeChange(page_size) {
+        this.order_pageinfo.page_size = page_size
+        this.getCusTrandList()
       },
     }
   }

@@ -5,6 +5,9 @@
       <el-form-item label="用户名" prop="phone">
         {{employeeInfo.phone}}
       </el-form-item>
+      <el-form-item label="姓名">
+        <el-input type="text" v-model="employeeInfo.real_name" placeholder="请输入姓名"></el-input>
+      </el-form-item>
       <el-form-item label="状态">
         <el-radio v-model="employeeInfo.is_payroll" label="1">在职</el-radio>
         <el-radio v-model="employeeInfo.is_payroll" label="0">离职</el-radio>
@@ -85,6 +88,7 @@
           if (res.data.success) {
             this.employeeInfo = {
               phone: res.data.data[this.$route.query.id].phone,
+              real_name: res.data.data[this.$route.query.id].real_name,
               is_payroll: res.data.data[this.$route.query.id].is_payroll.toString(),
               role_id: res.data.data[this.$route.query.id].role_id.toString(),
               group_id: res.data.data[this.$route.query.id].group_id,

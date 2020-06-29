@@ -6,7 +6,7 @@
         <span class="h4 prl1">已选择<span class="text-info">{{this.multipleSelection.length}}</span>位客户</span>
         <el-button type="primary" size="small" @click="showExportCustomer=true">导入客户</el-button>
         <el-button type="primary" size="small" @click="changeToMyCustomer()">转入到我的跟进客户</el-button>
-        <el-button type="danger" size="small" @click="del()" v-if="userInfo.is_sadmin===1">删除</el-button>
+<!--        <el-button type="danger" size="small" @click="del()" v-if="userInfo.is_sadmin===1">删除</el-button>-->
       </el-col>
       <el-col :span="12" class="text-right">
         <span class="h5">客户意向：</span>
